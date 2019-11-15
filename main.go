@@ -27,10 +27,11 @@ type Task struct {
 
 func main() {
 	var numCores = flag.Int("n", 2, "number of CPU cores to use")
+	var file = flag.String("f", "config.yaml", "Config file full path")
 	flag.Parse()
 	runtime.GOMAXPROCS(*numCores)
 
-	config := getConf()
+	config := getConf(*file)
 	stopSignal := make(chan int)
 	for _, tc := range config.Tasks {
 		task := work.NewTask(tc.Instance, tc.Mysql, tc.Es, tc.Interval)
@@ -42,9 +43,9 @@ func main() {
 	}
 }
 
-func getConf() *Config {
+func getConf(file string) *Config {
 	c := Config{}
-	yamlFile, err := ioutil.ReadFile("config.yaml")
+	yamlFile, err := ioutil.ReadFile(file)
 	if err != nil {
 		log.Fatalf("yamlFile.Get err #%v ", err)
 	}
