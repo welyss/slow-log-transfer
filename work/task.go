@@ -19,20 +19,31 @@ var (
 )
 
 type Task struct {
+	instance         string
 	dbs              *mysql.DBService
 	es               *elasticsearch.ESService
 	lastPoint        string
 	intervalInSecond int64
 }
 
-func NewTask(mysqlDsn string, esServices []string, intervalInSecond int64) *Task {
+func NewTask(instance string, mysqlDsn string, esServices []string, intervalInSecond int64) *Task {
 	// service init
 	dbs := mysql.NewDBService(mysqlDsn, 1, 1, 0)
 	es := elasticsearch.NewESService(esServices)
-	return &Task{dbs, es, "", intervalInSecond}
+	if intervalInSecond <= 0 {
+		intervalInSecond = 30
+	}
+	return &Task{instance, dbs, es, "", intervalInSecond}
 }
 
-func (work *Task) Run() {
+func (work *Task) Run(stopSignal <-chan int) {
+	// go routines stop signal
+	defer func() {
+		if err := recover(); err != nil {
+			log.Printf("run time panic: %v", err)
+		}
+		<-stopSignal
+	}()
 	var buf bytes.Buffer
 	for {
 		// Reset the buffer and items counter
@@ -42,7 +53,7 @@ func (work *Task) Run() {
 		esBegin := time.Now()
 		// Execute the query
 		work.dbs.QueryWithFetch(func(values [][]byte) {
-			slowlog := &Slowlog{InstanceId: `wystest`}
+			slowlog := &Slowlog{InstanceId: work.instance}
 			// start_time
 			slowlog.StartTime = string(values[0])
 			lastPointTmp = slowlog.StartTime
@@ -97,9 +108,10 @@ func (work *Task) Run() {
 			count++
 		}, "SELECT start_time, user_host, query_time, lock_time, rows_sent, rows_examined, db, sql_text, thread_id FROM test.slow_log where start_time > ?", work.lastPoint)
 		// flush to es
+		log.Printf("instance %s fetch %d records.", work.instance, count)
 		if count > 0 {
 			work.es.Bulk("mysqlslowlogs", buf.Bytes())
-			log.Printf("there are %d records indexed in %f seconds.\n", count, time.Since(esBegin).Seconds())
+			log.Printf("instance %s indexed %d records in %f seconds.\n", work.instance, count, time.Since(esBegin).Seconds())
 		}
 		// update last Point
 		if lastPointTmp > work.lastPoint {

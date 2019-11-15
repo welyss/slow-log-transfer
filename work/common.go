@@ -4,6 +4,7 @@ import (
 	"log"
 	"regexp"
 	"time"
+	"os"
 )
 
 const (
@@ -37,4 +38,6 @@ func init() {
 	if err != nil {
 		log.Fatal("zero time parse error.", err.Error())
 	}
+	log.SetOutput(os.Stdout)
 }
+

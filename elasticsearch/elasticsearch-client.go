@@ -6,6 +6,7 @@ import (
 	"bytes"
 	"encoding/json"
 	"log"
+	"os"
 )
 
 type ESService struct {
@@ -60,4 +61,8 @@ func (ess *ESService) Bulk(indexName string, body []byte) {
 			}
 		}
 	}
+}
+
+func init() {
+	log.SetOutput(os.Stdout)
 }

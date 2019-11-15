@@ -1,25 +1,61 @@
 package main
 
 import (
-	//	"encoding/json"
-	//	"fmt"
+	"flag"
 	"github.com/welyss/slow-log-transfer/work"
-	//	"log"
-	//	"regexp"
-	//	"strconv"
-	//	"strings"
-	//	"bytes"
-	//	"time"
+	"gopkg.in/yaml.v2"
+	"io/ioutil"
+	"log"
+	"os"
+	"runtime"
 )
 
 const ()
 
 var ()
 
+type Config struct {
+	Tasks []Task `yaml:"tasks"`
+}
+
+type Task struct {
+	Instance string   `yaml:"instance"`
+	Mysql    string   `yaml:"mysql"`
+	Es       []string `yaml:"es"`
+	Interval int64    `yaml:"interval"`
+}
+
 func main() {
-	dsn := "wuysh:wys19851011@/?readTimeout=30s&charset=utf8"
-	ess := []string{"http://10.0.29.73:9200", "http://10.0.29.75:9200", "http://10.0.29.117:9200"}
-	var intervalInSecond int64 = 10
-	task := work.NewTask(dsn, ess, intervalInSecond)
-	task.Run()
+	var numCores = flag.Int("n", 2, "number of CPU cores to use")
+	flag.Parse()
+	runtime.GOMAXPROCS(*numCores)
+
+	config := getConf()
+	stopSignal := make(chan int)
+	for _, tc := range config.Tasks {
+		task := work.NewTask(tc.Instance, tc.Mysql, tc.Es, tc.Interval)
+		go task.Run(stopSignal)
+	}
+	// wait all go routines finished.
+	for _, _ = range config.Tasks {
+		stopSignal <- 0
+	}
+}
+
+func getConf() *Config {
+	c := Config{}
+	yamlFile, err := ioutil.ReadFile("config.yaml")
+	if err != nil {
+		log.Fatalf("yamlFile.Get err #%v ", err)
+	}
+
+	err = yaml.Unmarshal(yamlFile, &c)
+	if err != nil {
+		log.Fatalf("Unmarshal: %v", err)
+	}
+	return &c
+}
+
+func init() {
+	log.SetOutput(os.Stdout)
 }
