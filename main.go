@@ -23,6 +23,7 @@ type Task struct {
 	Mysql    string   `yaml:"mysql"`
 	Es       []string `yaml:"es"`
 	Interval int64    `yaml:"interval"`
+	Eviction bool     `yaml:"eviction"`
 }
 
 func main() {
@@ -34,7 +35,7 @@ func main() {
 	config := getConf(*file)
 	stopSignal := make(chan int)
 	for _, tc := range config.Tasks {
-		task := work.NewTask(tc.Instance, tc.Mysql, tc.Es, tc.Interval)
+		task := work.NewTask(tc.Instance, tc.Mysql, tc.Es, tc.Interval, tc.Eviction)
 		go task.Run(stopSignal)
 	}
 	// wait all go routines finished.
