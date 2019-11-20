@@ -12,7 +12,10 @@ import (
 	"time"
 )
 
-const ()
+const (
+	EsKeywordMaxLen = 32766
+	SQLShortLength = 512
+)
 
 var (
 	meta = []byte(fmt.Sprintf(`{ "index" : { "_type" : "doc" } }%s`, "\n"))
@@ -25,19 +28,22 @@ type Task struct {
 	lastPoint        string
 	intervalInSecond int64
 	eviction         bool
+	index            string
+	count            int64
 }
 
-func NewTask(instance string, mysqlDsn string, esServices []string, intervalInSecond int64, eviction bool) *Task {
+func NewTask(instance string, mysqlDsn string, esServices []string, intervalInSecond int64, eviction bool, index string) *Task {
 	// service init
 	dbs := mysql.NewDBService(mysqlDsn, 1, 1, 0)
 	es := elasticsearch.NewESService(esServices)
 	if intervalInSecond <= 0 {
 		intervalInSecond = 30
 	}
-	return &Task{instance, dbs, es, "", intervalInSecond, eviction}
+	return &Task{instance, dbs, es, "", intervalInSecond, eviction, index, 0}
 }
 
 func (task *Task) Run(stopSignal <-chan int) {
+	log.Printf("task [%s] start at %s\n", task.instance, time.Now())
 	// go routines stop signal
 	defer func() {
 		if err := recover(); err != nil {
@@ -46,12 +52,22 @@ func (task *Task) Run(stopSignal <-chan int) {
 		<-stopSignal
 	}()
 	var buf bytes.Buffer
+	var query string
+	var args []interface{}
+	if task.eviction {
+		query = "SELECT start_time, user_host, query_time, lock_time, rows_sent, rows_examined, db, sql_text, thread_id FROM slow_log lock in share mode"
+	} else {
+		query = "SELECT start_time, user_host, query_time, lock_time, rows_sent, rows_examined, db, sql_text, thread_id FROM slow_log where start_time > ? lock in share mode"
+		args = append(args, task.lastPoint)
+	}
+	log.Printf("task %s query: %s , args: %d.\n", task.instance, query, len(args))
 	for {
-		actionInLoop(task, &buf)
+		task.count = 0
+		actionInLoop(task, &buf, query, args...)
 	}
 }
 
-func actionInLoop(task *Task, buf *bytes.Buffer) {
+func actionInLoop(task *Task, buf *bytes.Buffer, query string, args ...interface{}) {
 	defer func() {
 		if err := recover(); err != nil {
 			log.Printf("***** loop panic, loop will be continue: %v *****", err)
@@ -62,13 +78,19 @@ func actionInLoop(task *Task, buf *bytes.Buffer) {
 	// Reset the buffer and items counter
 	buf.Reset()
 	var lastPointTmp string
-	count := 0
 	esBegin := time.Now()
 	// Execute the query
 	tx := task.dbs.QueryWithFetchWithTx(func(values [][]byte) {
 		slowlog := &Slowlog{InstanceId: task.instance}
 		// start_time
 		slowlog.StartTime = string(values[0])
+		// support for mysql v5.6
+		if len(slowlog.StartTime) == 19 {
+			slowlog.StartTime += ".000001"
+		}
+		// convert by es default timezone
+		local, _ := time.ParseInLocation(FullTimeLayout, slowlog.StartTime, time.Local)
+		slowlog.StartTime = local.In(time.UTC).Format(FullTimeLayout)
 		lastPointTmp = slowlog.StartTime
 		// user_host
 		matched := re.FindAllStringSubmatch(string(values[1]), -1)
@@ -101,6 +123,12 @@ func actionInLoop(task *Task, buf *bytes.Buffer) {
 		slowlog.Db = string(values[6])
 		// sql_text
 		slowlog.SqlText = string(values[7])
+		// sql_text_short
+		if len(values[7]) > SQLShortLength {
+			slowlog.SqlTextShort = string(values[7][:SQLShortLength])
+		} else {
+			slowlog.SqlTextShort = string(values[7])
+		}
 		// thread_id
 		intValue, _ = strconv.Atoi(string(values[8]))
 		slowlog.ThreadId = int64(intValue)
@@ -118,8 +146,8 @@ func actionInLoop(task *Task, buf *bytes.Buffer) {
 		buf.Grow(len(meta) + len(data))
 		buf.Write(meta)
 		buf.Write(data)
-		count++
-	}, "SELECT start_time, user_host, query_time, lock_time, rows_sent, rows_examined, db, sql_text, thread_id FROM slow_log where start_time > ? lock in share mode", task.lastPoint)
+		task.count++
+	}, query, args...)
 	defer func() {
 		if err := recover(); err != nil {
 			log.Printf("transaction inner loop panic, tx rollback: %v", err)
@@ -128,10 +156,12 @@ func actionInLoop(task *Task, buf *bytes.Buffer) {
 	}()
 
 	// flush to es
-//	log.Printf("task %s fetch %d records.", task.instance, count)
-	if count > 0 {
-		task.es.Bulk("mysqlslowlogs", buf.Bytes())
-		log.Printf("task %s indexed %d records in %f seconds.\n", task.instance, count, time.Since(esBegin).Seconds())
+	//	log.Printf("task %s fetch %d records.\n", task.instance, task.count)
+	if task.count > 0 {
+		// add suffix to index name
+		index := task.index + "-" + time.Now().Format("2006.01.02")
+		task.es.Bulk(index, buf.Bytes())
+		log.Printf("task %s indexed %d records in %f seconds.\n", task.instance, task.count, time.Since(esBegin).Seconds())
 
 		// clear table
 		if task.eviction {

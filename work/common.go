@@ -2,9 +2,9 @@ package work
 
 import (
 	"log"
+	"os"
 	"regexp"
 	"time"
-	"os"
 )
 
 const (
@@ -29,6 +29,7 @@ type Slowlog struct {
 	RowsExamined int64   `json:"rows_examined"`
 	Db           string  `json:"db"`
 	SqlText      string  `json:"sql_text"`
+	SqlTextShort string  `json:"sql_text_short"`
 	ThreadId     int64   `json:"thread_id"`
 }
 
@@ -40,4 +41,3 @@ func init() {
 	}
 	log.SetOutput(os.Stdout)
 }
-
