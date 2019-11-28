@@ -30,6 +30,7 @@ type Slowlog struct {
 	Db           string  `json:"db"`
 	SqlText      string  `json:"sql_text"`
 	SqlTextShort string  `json:"sql_text_short"`
+	SqlTextEncode string  `json:"sql_text_encode"`
 	ThreadId     int64   `json:"thread_id"`
 }
 

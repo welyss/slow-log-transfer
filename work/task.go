@@ -10,6 +10,7 @@ import (
 	"os"
 	"strconv"
 	"time"
+	"net/url"
 )
 
 const (
@@ -129,6 +130,8 @@ func actionInLoop(task *Task, buf *bytes.Buffer, query string, args ...interface
 		} else {
 			slowlog.SqlTextShort = string(values[7])
 		}
+		// sql_text_encode
+		slowlog.SqlTextEncode = url.QueryEscape(slowlog.SqlTextShort)
 		// thread_id
 		intValue, _ = strconv.Atoi(string(values[8]))
 		slowlog.ThreadId = int64(intValue)
