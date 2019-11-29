@@ -6,16 +6,18 @@ import (
 	"fmt"
 	"github.com/welyss/slow-log-transfer/elasticsearch"
 	"github.com/welyss/slow-log-transfer/mysql"
+	"github.com/xwb1989/sqlparser"
 	"log"
+	"net/url"
 	"os"
 	"strconv"
+	"strings"
 	"time"
-	"net/url"
 )
 
 const (
 	EsKeywordMaxLen = 32766
-	SQLShortLength = 512
+	SQLShortLength  = 512
 )
 
 var (
@@ -125,11 +127,19 @@ func actionInLoop(task *Task, buf *bytes.Buffer, query string, args ...interface
 		// sql_text
 		slowlog.SqlText = string(values[7])
 		// sql_text_short
-		if len(values[7]) > SQLShortLength {
-			slowlog.SqlTextShort = string(values[7][:SQLShortLength])
+		// replace params of sql to ?
+		parsedSQL, _ := sqlparser.RedactSQLQuery(slowlog.SqlText)
+		if err == nil && parsedSQL != "" {
+			parsedSQL = strings.Replace(parsedSQL, ":redacted", "?", -1)
 		} else {
-			slowlog.SqlTextShort = string(values[7])
+			parsedSQL = slowlog.SqlText
 		}
+		// cut
+		runes := []rune(parsedSQL)
+		if len(runes) > SQLShortLength {
+			parsedSQL = string(runes[:SQLShortLength])
+		}
+		slowlog.SqlTextShort = parsedSQL
 		// sql_text_encode
 		slowlog.SqlTextEncode = url.QueryEscape(slowlog.SqlTextShort)
 		// thread_id
