@@ -15,7 +15,8 @@ const ()
 var ()
 
 type Config struct {
-	Tasks []Task `yaml:"tasks"`
+	Tasks      []Task `yaml:"tasks"`
+	BufferSize int    `yaml:"buffersize"`
 }
 
 type Task struct {
@@ -34,6 +35,9 @@ func main() {
 	runtime.GOMAXPROCS(*numCores)
 
 	config := getConf(*file)
+	if config.BufferSize > 0 {
+		work.BufferSize = config.BufferSize
+	}
 	stopSignal := make(chan int)
 	for _, tc := range config.Tasks {
 		task := work.NewTask(tc.Instance, tc.Mysql, tc.Es, tc.Interval, tc.Eviction, tc.Index)

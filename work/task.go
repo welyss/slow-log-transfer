@@ -21,7 +21,8 @@ const (
 )
 
 var (
-	meta = []byte(fmt.Sprintf(`{ "index" : { "_type" : "doc" } }%s`, "\n"))
+	meta       = []byte(fmt.Sprintf(`{ "index" : { "_type" : "doc" } }%s`, "\n"))
+	BufferSize = 16777216
 )
 
 type Task struct {
@@ -81,7 +82,9 @@ func actionInLoop(task *Task, buf *bytes.Buffer, query string, args ...interface
 	// Reset the buffer and items counter
 	buf.Reset()
 	var lastPointTmp string
-	esBegin := time.Now()
+	task.count = 0
+	updated := 0
+
 	// Execute the query
 	tx := task.dbs.QueryWithFetchWithTx(func(values [][]byte) {
 		slowlog := &Slowlog{InstanceId: task.instance}
@@ -160,7 +163,22 @@ func actionInLoop(task *Task, buf *bytes.Buffer, query string, args ...interface
 		buf.Write(meta)
 		buf.Write(data)
 		task.count++
+		updated++
+
+		// flush to es
+		//	log.Printf("task %s fetch %d records.\n", task.instance, task.count)
+		if buf.Len() > BufferSize {
+			// add suffix to index name
+			index := task.index + "-" + time.Now().Format("2006.01.02")
+			esBegin := time.Now()
+			task.es.Bulk(index, buf.Bytes())
+			log.Printf("task %s indexed %d records in %f seconds in loop with %d bytes.\n", task.instance, updated, time.Since(esBegin).Seconds(), buf.Len())
+			buf.Reset()
+			updated = 0
+		}
+
 	}, query, args...)
+
 	defer func() {
 		if err := recover(); err != nil {
 			log.Printf("transaction inner loop panic, tx rollback: %v", err)
@@ -168,14 +186,17 @@ func actionInLoop(task *Task, buf *bytes.Buffer, query string, args ...interface
 		}
 	}()
 
-	// flush to es
-	//	log.Printf("task %s fetch %d records.\n", task.instance, task.count)
-	if task.count > 0 {
+	if updated > 0 && buf.Len() > 0 {
 		// add suffix to index name
 		index := task.index + "-" + time.Now().Format("2006.01.02")
+		esBegin := time.Now()
 		task.es.Bulk(index, buf.Bytes())
-		log.Printf("task %s indexed %d records in %f seconds.\n", task.instance, task.count, time.Since(esBegin).Seconds())
+		log.Printf("task %s indexed %d records in %f seconds in the end.\n", task.instance, updated, time.Since(esBegin).Seconds())
+		buf.Reset()
+		updated = 0
+	}
 
+	if task.count > 0 {
 		// clear table
 		if task.eviction {
 			_, _, err := task.dbs.ExecWithTx(tx, "truncate table slow_log")
