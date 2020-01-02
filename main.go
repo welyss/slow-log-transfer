@@ -6,6 +6,8 @@ import (
 	"gopkg.in/yaml.v2"
 	"io/ioutil"
 	"log"
+	_ "net/http/pprof"
+	"net/http"
 	"os"
 	"runtime"
 )
@@ -31,8 +33,17 @@ type Task struct {
 func main() {
 	var numCores = flag.Int("n", 2, "number of CPU cores to use")
 	var file = flag.String("f", "config.yaml", "Config file full path")
+	var pprof = flag.String("p", "", "pprof url, sample: localhost:6060")
 	flag.Parse()
 	runtime.GOMAXPROCS(*numCores)
+
+	// pprof
+	if len(*pprof) > 0 {
+		go func() {
+			log.Println("pprof running.")
+			log.Println(http.ListenAndServe(*pprof, nil))
+		}()
+	}
 
 	config := getConf(*file)
 	if config.BufferSize > 0 {

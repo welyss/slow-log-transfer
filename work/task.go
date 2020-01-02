@@ -76,6 +76,7 @@ func actionInLoop(task *Task, buf *bytes.Buffer, query string, args ...interface
 		if err := recover(); err != nil {
 			log.Printf("***** loop panic, loop will be continue: %v *****", err)
 		}
+
 		// wait for next
 		time.Sleep(time.Duration(task.intervalInSecond) * time.Second)
 	}()
