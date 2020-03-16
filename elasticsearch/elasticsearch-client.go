@@ -46,10 +46,10 @@ func NewESService(address []string) *ESService {
 func (ess *ESService) Bulk(indexName string, body []byte) {
 	res, err := ess.es.Bulk(bytes.NewReader(body), ess.es.Bulk.WithIndex(indexName))
 	// Close the response body, to prevent reaching the limit for goroutines or file handles
-	defer res.Body.Close()
 	if err != nil {
 		panic(err.Error())
 	} else {
+		defer res.Body.Close()
 		var blk *bulkResponse
 		if err = json.NewDecoder(res.Body).Decode(&blk); err != nil {
 			panic(err.Error())

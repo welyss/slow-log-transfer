@@ -23,6 +23,7 @@ const (
 var (
 	meta       = []byte(fmt.Sprintf(`{ "index" : { "_type" : "doc" } }%s`, "\n"))
 	BufferSize = 16777216
+	SQLRedactLimit  = -1
 )
 
 type Task struct {
@@ -132,11 +133,17 @@ func actionInLoop(task *Task, buf *bytes.Buffer, query string, args ...interface
 		slowlog.SqlText = string(values[7])
 		// sql_text_short
 		// replace params of sql to ?
-		parsedSQL, _ := sqlparser.RedactSQLQuery(slowlog.SqlText)
-		if err == nil && parsedSQL != "" {
-			parsedSQL = strings.Replace(parsedSQL, ":redacted", "?", -1)
-		} else {
+		var parsedSQL string
+		if SQLRedactLimit > 0 && len(slowlog.SqlText) > SQLRedactLimit {
 			parsedSQL = slowlog.SqlText
+			log.Println("sql size:", len(slowlog.SqlText), "over", SQLRedactLimit)
+		} else {
+			parsedSQL, _ = sqlparser.RedactSQLQuery(slowlog.SqlText)
+			if err == nil && parsedSQL != "" {
+				parsedSQL = strings.Replace(parsedSQL, ":redacted", "?", -1)
+			} else {
+				parsedSQL = slowlog.SqlText
+			}
 		}
 		// cut
 		runes := []rune(parsedSQL)
@@ -204,6 +211,7 @@ func actionInLoop(task *Task, buf *bytes.Buffer, query string, args ...interface
 			if err != nil {
 				panic(err.Error())
 			}
+			log.Println("truncate table slow_log was success")
 		}
 	}
 

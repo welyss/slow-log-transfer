@@ -1,37 +1,4 @@
 {
-  "__inputs": [],
-  "__requires": [
-    {
-      "type": "grafana",
-      "id": "grafana",
-      "name": "Grafana",
-      "version": "5.2.2"
-    },
-    {
-      "type": "panel",
-      "id": "grafana-piechart-panel",
-      "name": "Pie Chart",
-      "version": "1.3.6"
-    },
-    {
-      "type": "panel",
-      "id": "graph",
-      "name": "Graph",
-      "version": "5.0.0"
-    },
-    {
-      "type": "panel",
-      "id": "heatmap",
-      "name": "Heatmap",
-      "version": "5.0.0"
-    },
-    {
-      "type": "panel",
-      "id": "table",
-      "name": "Table",
-      "version": "5.0.0"
-    }
-  ],
   "annotations": {
     "list": [
       {
@@ -49,8 +16,8 @@
   "editable": true,
   "gnetId": null,
   "graphTooltip": 0,
-  "id": null,
-  "iteration": 1574998119861,
+  "id": 307,
+  "iteration": 1584349399721,
   "links": [],
   "panels": [
     {
@@ -62,7 +29,7 @@
         "threshold": 0
       },
       "datasource": "$datasource",
-      "description": " ˝æ›ø‚∑÷≤º",
+      "description": "Êï∞ÊçÆÂ∫ìÂàÜÂ∏É",
       "fontSize": "80%",
       "format": "short",
       "gridPos": {
@@ -86,6 +53,7 @@
       "links": [],
       "maxDataPoints": 3,
       "nullPointMode": "connected",
+      "options": {},
       "pieType": "pie",
       "strokeWidth": "0.1",
       "targets": [
@@ -121,13 +89,12 @@
               "type": "count"
             }
           ],
-          "query": "instance_id:$instance AND db:$schema AND host:$host AND user:$user",
+          "query": "instance_id:$instance AND db:$schema AND host:$host AND user:$user NOT sql_text_short:${filter:glob}",
           "refId": "A",
           "timeField": "start_time"
         }
       ],
-      "title": " ˝æ›ø‚∑÷≤º-Top20",
-      "transparent": false,
+      "title": "Êï∞ÊçÆÂ∫ìÂàÜÂ∏É-Top20",
       "type": "grafana-piechart-panel",
       "valueName": "total"
     },
@@ -164,6 +131,7 @@
       "links": [],
       "maxDataPoints": 3,
       "nullPointMode": "connected",
+      "options": {},
       "pieType": "pie",
       "strokeWidth": "0.1",
       "targets": [
@@ -199,12 +167,12 @@
               "type": "count"
             }
           ],
-          "query": "instance_id:$instance AND db:$schema AND host:$host AND user:$user",
+          "query": "instance_id:$instance AND db:$schema AND host:$host AND user:$user NOT sql_text_short:${filter:glob}",
           "refId": "A",
           "timeField": "start_time"
         }
       ],
-      "title": "”√ªß∑÷≤º-Top20",
+      "title": "Áî®Êà∑ÂàÜÂ∏É-Top20",
       "type": "grafana-piechart-panel",
       "valueName": "total"
     },
@@ -241,6 +209,7 @@
       "links": [],
       "maxDataPoints": 3,
       "nullPointMode": "connected",
+      "options": {},
       "pieType": "pie",
       "strokeWidth": "0.1",
       "targets": [
@@ -276,12 +245,12 @@
               "type": "count"
             }
           ],
-          "query": "instance_id:$instance AND db:$schema AND host:$host AND user:$user",
+          "query": "instance_id:$instance AND db:$schema AND host:$host AND user:$user NOT sql_text_short:${filter:glob}",
           "refId": "A",
           "timeField": "start_time"
         }
       ],
-      "title": "øÕªß∂À∑÷≤º-Top20",
+      "title": "ÂÆ¢Êà∑Á´ØÂàÜÂ∏É-Top20",
       "type": "grafana-piechart-panel",
       "valueName": "total"
     },
@@ -291,7 +260,7 @@
         "cardRound": null
       },
       "color": {
-        "cardColor": "rgb(255, 255, 255)",
+        "cardColor": "#3274D9",
         "colorScale": "sqrt",
         "colorScheme": "interpolateGreys",
         "exponent": 0.6,
@@ -306,12 +275,15 @@
         "y": 9
       },
       "heatmap": {},
+      "hideZeroBuckets": false,
       "highlightCards": true,
       "id": 9,
       "legend": {
         "show": true
       },
       "links": [],
+      "options": {},
+      "reverseYBuckets": false,
       "targets": [
         {
           "bucketAggs": [
@@ -331,7 +303,7 @@
               "field": "start_time",
               "id": "2",
               "settings": {
-                "interval": "1h",
+                "interval": "10m",
                 "min_doc_count": 0,
                 "trimEdges": 0
               },
@@ -348,12 +320,12 @@
               "type": "avg"
             }
           ],
-          "query": "instance_id:$instance AND db:$schema AND host:$host AND user:$user",
+          "query": "instance_id:$instance AND db:$schema AND host:$host AND user:$user NOT sql_text_short:${filter:glob}",
           "refId": "A",
           "timeField": "start_time"
         }
       ],
-      "title": "¬˝≤È—Ø÷¥–– ±≥§»»µ„∑÷≤º(√ø–° ±)",
+      "title": "ÊÖ¢Êü•ËØ¢ÊâßË°åÊó∂ÈïøÁÉ≠ÁÇπÂàÜÂ∏É(ÊØè10ÂàÜÈíü)",
       "tooltip": {
         "show": true,
         "showHistogram": false
@@ -383,13 +355,16 @@
       "dashLength": 10,
       "dashes": false,
       "datasource": "$datasource",
+      "decimals": 0,
       "fill": 1,
+      "fillGradient": 0,
       "gridPos": {
         "h": 9,
         "w": 24,
         "x": 0,
         "y": 16
       },
+      "hiddenSeries": false,
       "id": 20,
       "legend": {
         "avg": false,
@@ -404,6 +379,9 @@
       "linewidth": 1,
       "links": [],
       "nullPointMode": "null",
+      "options": {
+        "dataLinks": []
+      },
       "percentage": false,
       "pointradius": 5,
       "points": false,
@@ -416,10 +394,22 @@
         {
           "bucketAggs": [
             {
+              "fake": true,
+              "field": "db",
+              "id": "3",
+              "settings": {
+                "min_doc_count": 1,
+                "order": "desc",
+                "orderBy": "_count",
+                "size": "10"
+              },
+              "type": "terms"
+            },
+            {
               "field": "start_time",
               "id": "2",
               "settings": {
-                "interval": "1h",
+                "interval": "10m",
                 "min_doc_count": 0,
                 "trimEdges": null
               },
@@ -433,15 +423,16 @@
               "type": "count"
             }
           ],
-          "query": "instance_id:$instance AND db:$schema AND host:$host AND user:$user",
+          "query": "instance_id:$instance AND db:$schema AND host:$host AND user:$user NOT sql_text_short:${filter:glob}",
           "refId": "A",
           "timeField": "start_time"
         }
       ],
       "thresholds": [],
       "timeFrom": null,
+      "timeRegions": [],
       "timeShift": null,
-      "title": "¬˝≤È—Ø ˝¡øÕ≥º∆(√ø–° ±)",
+      "title": "ÊÖ¢Êü•ËØ¢Êï∞ÈáèÁªüËÆ°(ÊØè10ÂàÜÈíü)",
       "tooltip": {
         "shared": true,
         "sort": 0,
@@ -457,6 +448,7 @@
       },
       "yaxes": [
         {
+          "decimals": 0,
           "format": "short",
           "label": null,
           "logBase": 1,
@@ -470,7 +462,7 @@
           "logBase": 1,
           "max": null,
           "min": null,
-          "show": true
+          "show": false
         }
       ],
       "yaxis": {
@@ -490,12 +482,13 @@
       },
       "id": 16,
       "links": [],
+      "options": {},
       "pageSize": 20,
       "scroll": true,
       "showHeader": true,
       "sort": {
-        "col": 5,
-        "desc": true
+        "col": null,
+        "desc": false
       },
       "styles": [
         {
@@ -517,7 +510,7 @@
           "type": "string"
         },
         {
-          "alias": "¥Œ ˝",
+          "alias": "Ê¨°Êï∞",
           "colorMode": null,
           "colors": [
             "rgba(245, 54, 54, 0.9)",
@@ -530,10 +523,10 @@
           "pattern": "Count",
           "thresholds": [],
           "type": "number",
-          "unit": "short"
+          "unit": "none"
         },
         {
-          "alias": "◊Ó¥Û ±≥§",
+          "alias": "ÊúÄÂ§ßÊó∂Èïø",
           "colorMode": null,
           "colors": [
             "rgba(245, 54, 54, 0.9)",
@@ -549,7 +542,7 @@
           "unit": "s"
         },
         {
-          "alias": "◊‹ ±≥§",
+          "alias": "ÊÄªÊó∂Èïø",
           "colorMode": null,
           "colors": [
             "rgba(245, 54, 54, 0.9)",
@@ -565,7 +558,7 @@
           "unit": "s"
         },
         {
-          "alias": "◊Ó¥ÛÀ¯",
+          "alias": "ÊúÄÂ§ßÈîÅ",
           "colorMode": null,
           "colors": [
             "rgba(245, 54, 54, 0.9)",
@@ -581,7 +574,7 @@
           "unit": "s"
         },
         {
-          "alias": "◊‹À¯",
+          "alias": "ÊÄªÈîÅ",
           "colorMode": null,
           "colors": [
             "rgba(245, 54, 54, 0.9)",
@@ -597,7 +590,7 @@
           "unit": "s"
         },
         {
-          "alias": "◊Ó¥ÛΩ‚Œˆ",
+          "alias": "ÊúÄÂ§ßËß£Êûê",
           "colorMode": null,
           "colors": [
             "rgba(245, 54, 54, 0.9)",
@@ -613,7 +606,7 @@
           "unit": "none"
         },
         {
-          "alias": "◊‹Ω‚Œˆ",
+          "alias": "ÊÄªËß£Êûê",
           "colorMode": null,
           "colors": [
             "rgba(245, 54, 54, 0.9)",
@@ -629,7 +622,7 @@
           "unit": "none"
         },
         {
-          "alias": "◊Ó¥Û∑µªÿ",
+          "alias": "ÊúÄÂ§ßËøîÂõû",
           "colorMode": null,
           "colors": [
             "rgba(245, 54, 54, 0.9)",
@@ -645,7 +638,7 @@
           "unit": "none"
         },
         {
-          "alias": "◊‹∑µªÿ",
+          "alias": "ÊÄªËøîÂõû",
           "colorMode": null,
           "colors": [
             "rgba(245, 54, 54, 0.9)",
@@ -687,7 +680,7 @@
               "settings": {
                 "min_doc_count": 1,
                 "order": "desc",
-                "orderBy": "_term",
+                "orderBy": "15",
                 "size": "0"
               },
               "type": "terms"
@@ -741,20 +734,31 @@
             {
               "field": "query_time",
               "id": "13",
+              "inlineScript": "(_value == 0 ? 0.2 : _value)",
               "meta": {},
-              "settings": {},
+              "settings": {
+                "script": {
+                  "inline": "(_value == 0 ? 0.2 : _value)"
+                }
+              },
               "type": "max"
             },
             {
               "field": "query_time",
               "id": "15",
+              "inlineScript": "(_value == 0 ? 0.2 : _value)",
               "meta": {},
-              "settings": {},
+              "settings": {
+                "script": {
+                  "inline": "(_value == 0 ? 0.2 : _value)"
+                }
+              },
               "type": "sum"
             },
             {
               "field": "lock_time",
               "id": "16",
+              "inlineScript": null,
               "meta": {},
               "settings": {},
               "type": "max"
@@ -762,6 +766,7 @@
             {
               "field": "lock_time",
               "id": "17",
+              "inlineScript": null,
               "meta": {},
               "settings": {},
               "type": "sum"
@@ -795,18 +800,18 @@
               "type": "sum"
             }
           ],
-          "query": "instance_id:$instance AND db:$schema AND host:$host AND user:$user NOT sql_text_short:\"Binlog Dump\" NOT sql_text_short:\"Binlog Dump GTID\"",
+          "query": "instance_id:$instance AND db:$schema AND host:$host AND user:$user NOT sql_text_short:${filter:glob}",
           "refId": "A",
           "timeField": "start_time"
         }
       ],
-      "title": "≤È—Ø ±≥§Top",
+      "title": "Êü•ËØ¢Êó∂ÈïøTop",
       "transform": "table",
       "type": "table"
     }
   ],
-  "refresh": "1m",
-  "schemaVersion": 16,
+  "refresh": false,
+  "schemaVersion": 21,
   "style": "dark",
   "tags": [
     "MySQL",
@@ -817,14 +822,13 @@
       {
         "allValue": null,
         "current": {
-          "selected": false,
-          "tags": [],
+          "selected": true,
           "text": "Prod",
           "value": "Prod"
         },
         "hide": 0,
         "includeAll": false,
-        "label": "ª∑æ≥",
+        "label": "ÁéØÂ¢É",
         "multi": false,
         "name": "env",
         "options": [
@@ -845,6 +849,7 @@
           }
         ],
         "query": "Dev,Simu,Prod",
+        "skipUrlSync": false,
         "type": "custom"
       },
       {
@@ -853,27 +858,37 @@
           "value": "Prod-mysqlslow"
         },
         "hide": 2,
-        "label": " ˝æ›‘¥(ª∑æ≥)",
+        "includeAll": false,
+        "label": "Êï∞ÊçÆÊ∫ê(ÁéØÂ¢É)",
+        "multi": false,
         "name": "datasource",
         "options": [],
         "query": "elasticsearch",
         "refresh": 1,
         "regex": "/$env+-mysqlslow/",
+        "skipUrlSync": false,
         "type": "datasource"
       },
       {
         "allValue": null,
-        "current": {},
+        "current": {
+          "text": "All",
+          "value": [
+            "$__all"
+          ]
+        },
         "datasource": "$datasource",
+        "definition": "",
         "hide": 0,
         "includeAll": true,
-        "label": " ˝æ›ø‚ µ¿˝",
+        "label": "Êï∞ÊçÆÂ∫ìÂÆû‰æã",
         "multi": true,
         "name": "instance",
         "options": [],
         "query": "{\"find\":\"terms\",\"field\":\"instance_id\"}",
         "refresh": 2,
         "regex": "",
+        "skipUrlSync": false,
         "sort": 0,
         "tagValuesQuery": "",
         "tags": [],
@@ -883,17 +898,24 @@
       },
       {
         "allValue": null,
-        "current": {},
+        "current": {
+          "text": "All",
+          "value": [
+            "$__all"
+          ]
+        },
         "datasource": "$datasource",
+        "definition": "",
         "hide": 0,
         "includeAll": true,
-        "label": " ˝æ›ø‚",
+        "label": "Êï∞ÊçÆÂ∫ì",
         "multi": true,
         "name": "schema",
         "options": [],
         "query": "{\"find\":\"terms\",\"field\":\"db\", \"query\":\"instance_id:$instance NOT db:information_schema\"}",
         "refresh": 2,
         "regex": "",
+        "skipUrlSync": false,
         "sort": 0,
         "tagValuesQuery": "",
         "tags": [],
@@ -903,17 +925,24 @@
       },
       {
         "allValue": null,
-        "current": {},
+        "current": {
+          "text": "All",
+          "value": [
+            "$__all"
+          ]
+        },
         "datasource": "$datasource",
+        "definition": "",
         "hide": 0,
         "includeAll": true,
-        "label": "∑√Œ ÷˜ª˙",
+        "label": "ËÆøÈóÆ‰∏ªÊú∫",
         "multi": true,
         "name": "host",
         "options": [],
         "query": "{\"find\":\"terms\",\"field\":\"host\",\"query\":\"instance_id:$instance AND db:$schema \"}",
         "refresh": 2,
         "regex": "",
+        "skipUrlSync": false,
         "sort": 0,
         "tagValuesQuery": "",
         "tags": [],
@@ -923,28 +952,55 @@
       },
       {
         "allValue": null,
-        "current": {},
+        "current": {
+          "text": "All",
+          "value": [
+            "$__all"
+          ]
+        },
         "datasource": "$datasource",
+        "definition": "",
         "hide": 0,
         "includeAll": true,
-        "label": "∑√Œ ”√ªß",
+        "label": "ËÆøÈóÆÁî®Êà∑",
         "multi": true,
         "name": "user",
         "options": [],
         "query": "{\"find\":\"terms\",\"field\":\"user\",\"query\":\"instance_id:$instance AND db:$schema AND host:$host\"}",
         "refresh": 2,
         "regex": "",
+        "skipUrlSync": false,
         "sort": 0,
         "tagValuesQuery": "",
         "tags": [],
         "tagsQuery": "",
         "type": "query",
         "useTags": false
+      },
+      {
+        "current": {
+          "selected": false,
+          "text": "(\"Binlog Dump\",\"Binlog Dump GTID\",\"Sleep\", \"commit\")",
+          "value": "(\"Binlog Dump\",\"Binlog Dump GTID\",\"Sleep\", \"commit\")"
+        },
+        "hide": 2,
+        "label": null,
+        "name": "filter",
+        "options": [
+          {
+            "selected": true,
+            "text": "(\"Binlog Dump\",\"Binlog Dump GTID\",\"Sleep\", \"commit\")",
+            "value": "(\"Binlog Dump\",\"Binlog Dump GTID\",\"Sleep\", \"commit\")"
+          }
+        ],
+        "query": "(\"Binlog Dump\",\"Binlog Dump GTID\",\"Sleep\", \"commit\")",
+        "skipUrlSync": false,
+        "type": "constant"
       }
     ]
   },
   "time": {
-    "from": "now-1h",
+    "from": "now-24h",
     "to": "now"
   },
   "timepicker": {
@@ -974,6 +1030,6 @@
   },
   "timezone": "",
   "title": "MySQL-SlowLog",
-  "uid": "1fnopZxZk",
-  "version": 84
+  "uid": "y_usWFxWk",
+  "version": 29
 }

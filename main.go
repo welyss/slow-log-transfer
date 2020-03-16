@@ -6,8 +6,8 @@ import (
 	"gopkg.in/yaml.v2"
 	"io/ioutil"
 	"log"
-	_ "net/http/pprof"
 	"net/http"
+	_ "net/http/pprof"
 	"os"
 	"runtime"
 )
@@ -17,8 +17,9 @@ const ()
 var ()
 
 type Config struct {
-	Tasks      []Task `yaml:"tasks"`
-	BufferSize int    `yaml:"buffersize"`
+	Tasks          []Task `yaml:"tasks"`
+	BufferSize     int    `yaml:"buffersize"`
+	SQLRedactLimit int    `yaml:"sqlredactlimit"`
 }
 
 type Task struct {
@@ -33,7 +34,7 @@ type Task struct {
 func main() {
 	var numCores = flag.Int("n", 2, "number of CPU cores to use")
 	var file = flag.String("f", "config.yaml", "Config file full path")
-	var pprof = flag.String("p", "", "pprof url, sample: localhost:6060")
+	var pprof = flag.String("p", "0.0.0.0:6060", "pprof url, sample: localhost:6060")
 	flag.Parse()
 	runtime.GOMAXPROCS(*numCores)
 
@@ -49,6 +50,11 @@ func main() {
 	if config.BufferSize > 0 {
 		work.BufferSize = config.BufferSize
 	}
+	if config.SQLRedactLimit > 0 {
+		work.SQLRedactLimit = config.SQLRedactLimit
+	}
+	log.Println("sql redact limit:", work.SQLRedactLimit)
+
 	stopSignal := make(chan int)
 	for _, tc := range config.Tasks {
 		task := work.NewTask(tc.Instance, tc.Mysql, tc.Es, tc.Interval, tc.Eviction, tc.Index)
