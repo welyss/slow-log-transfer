@@ -1,3 +1,5 @@
 
 vendor
 config.yaml
+go.sum
+
