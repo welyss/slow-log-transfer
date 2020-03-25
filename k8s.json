@@ -1,0 +1,87 @@
+{
+  "kind": "Deployment",
+  "apiVersion": "extensions/v1beta1",
+  "metadata": {
+    "name": "slow-log-transfer",
+    "namespace": "dba",
+    "labels": {
+      "app": "slow-log-transfer",
+      "release": "slow-log-transfer:1.0.0"
+    }
+  },
+  "spec": {
+    "replicas": 1,
+    "selector": {
+      "matchLabels": {
+        "app": "slow-log-transfer"
+      }
+    },
+    "template": {
+      "metadata": {
+        "labels": {
+          "app": "slow-log-transfer"
+        }
+      },
+      "spec": {
+        "volumes": [
+          {
+            "name": "slowconfig",
+            "configMap": {
+              "name": "slow-log-transfer"
+            }
+          }
+        ],
+        "containers": [
+          {
+            "name": "slow-log-transfer",
+            "image": "registry.dev.hbec.com/dba/slowlog-transfer:1.1",
+            "resources": {
+              "limits": {
+                "cpu": "100m",
+                "memory": "128Mi"
+              },
+              "requests": {
+                "cpu": "100m",
+                "memory": "128Mi"
+              }
+            },
+            "volumeMounts": [
+              {
+                "name": "slowconfig",
+                "mountPath": "/config.yaml",
+                "subPath": "config.yaml"
+              }
+            ],
+            "livenessProbe": {
+              "exec": {
+                "command": [
+                  "/bin/sh",
+                  "-c",
+                  "healthcheck.sh"
+                ]
+              },
+              "timeoutSeconds": 1,
+              "periodSeconds": 1,
+              "successThreshold": 1,
+              "failureThreshold": 10
+            },
+            "terminationMessagePath": "/dev/termination-log",
+            "terminationMessagePolicy": "File",
+            "imagePullPolicy": "IfNotPresent"
+          }
+        ],
+        "restartPolicy": "Always",
+        "terminationGracePeriodSeconds": 30
+      }
+    },
+    "strategy": {
+      "type": "RollingUpdate",
+      "rollingUpdate": {
+        "maxUnavailable": 1,
+        "maxSurge": 1
+      }
+    },
+    "revisionHistoryLimit": 2,
+    "progressDeadlineSeconds": 600
+  }
+}

@@ -136,7 +136,7 @@ func actionInLoop(task *Task, buf *bytes.Buffer, query string, args ...interface
 		var parsedSQL string
 		if SQLRedactLimit > 0 && len(slowlog.SqlText) > SQLRedactLimit {
 			parsedSQL = slowlog.SqlText
-			log.Println("sql size:", len(slowlog.SqlText), "over", SQLRedactLimit)
+			log.Println("sql size:", len(slowlog.SqlText), "over", SQLRedactLimit, ", skip RedactSQLQuery.")
 		} else {
 			parsedSQL, _ = sqlparser.RedactSQLQuery(slowlog.SqlText)
 			if err == nil && parsedSQL != "" {
