@@ -61,6 +61,18 @@ func (dbs *DBService) QueryWithFetch(action func(values [][]byte), query string,
 	}
 }
 
+func (dbs *DBService) Exec(query string, args ...interface{}) (int64, int64, error) {
+	result, err := dbs.dbPool.Exec(query, args...)
+	var lastInsertId, rowsAffected int64
+	if err == nil {
+		lastInsertId, _ = result.LastInsertId()
+		rowsAffected, _ = result.RowsAffected()
+	} else {
+		panic(err.Error())
+	}
+	return lastInsertId, rowsAffected, err
+}
+
 func (dbs *DBService) ExecWithTx(tx *sql.Tx, query string, args ...interface{}) (int64, int64, error) {
 	result, err := tx.Exec(query, args...)
 	var lastInsertId, rowsAffected int64

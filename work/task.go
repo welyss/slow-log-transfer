@@ -21,9 +21,9 @@ const (
 )
 
 var (
-	meta       = []byte(fmt.Sprintf(`{ "index" : { "_type" : "doc" } }%s`, "\n"))
-	BufferSize = 16777216
-	SQLRedactLimit  = -1
+	meta           = []byte(fmt.Sprintf(`{ "index" : { "_type" : "doc" } }%s`, "\n"))
+	BufferSize     = 16777216
+	SQLRedactLimit = -1
 )
 
 type Task struct {
@@ -60,7 +60,7 @@ func (task *Task) Run(stopSignal <-chan int) {
 	var query string
 	var args []interface{}
 	if task.eviction {
-		query = "SELECT start_time, user_host, query_time, lock_time, rows_sent, rows_examined, db, sql_text, thread_id FROM slow_log lock in share mode"
+		query = "SELECT start_time, user_host, query_time, lock_time, rows_sent, rows_examined, db, sql_text, thread_id FROM slow_log_bak lock in share mode"
 	} else {
 		query = "SELECT start_time, user_host, query_time, lock_time, rows_sent, rows_examined, db, sql_text, thread_id FROM slow_log where start_time > ? lock in share mode"
 		args = append(args, task.lastPoint)
@@ -87,6 +87,29 @@ func actionInLoop(task *Task, buf *bytes.Buffer, query string, args ...interface
 	task.count = 0
 	updated := 0
 
+	// if eviction, switch table
+	if task.eviction {
+		_, _, err := task.dbs.Exec("drop table if exists slow_log_tmp")
+		if err == nil {
+			_, _, err := task.dbs.Exec("drop table if exists slow_log_bak")
+			if err == nil {
+				_, _, err := task.dbs.Exec("create table slow_log_tmp like slow_log")
+				if err == nil {
+					_, _, err := task.dbs.Exec("rename table slow_log to slow_log_bak, slow_log_tmp to slow_log")
+					if err != nil {
+						panic(err.Error())
+					}
+				} else {
+					panic(err.Error())
+				}
+			} else {
+				panic(err.Error())
+			}
+		} else {
+			panic(err.Error())
+		}
+	}
+
 	// Execute the query
 	tx := task.dbs.QueryWithFetchWithTx(func(values [][]byte) {
 		slowlog := &Slowlog{InstanceId: task.instance}
@@ -95,6 +118,8 @@ func actionInLoop(task *Task, buf *bytes.Buffer, query string, args ...interface
 		// support for mysql v5.6
 		if len(slowlog.StartTime) == 19 {
 			slowlog.StartTime += ".000001"
+		} else if len(slowlog.StartTime) > 19 && slowlog.StartTime[19:26] == ".000000" {
+			slowlog.StartTime = slowlog.StartTime[0:25] + "1"
 		}
 		// convert by es default timezone
 		local, _ := time.ParseInLocation(FullTimeLayout, slowlog.StartTime, time.Local)
@@ -156,7 +181,6 @@ func actionInLoop(task *Task, buf *bytes.Buffer, query string, args ...interface
 		// thread_id
 		intValue, _ = strconv.Atoi(string(values[8]))
 		slowlog.ThreadId = int64(intValue)
-
 		// format into bytes
 		data, err := json.Marshal(slowlog)
 		if err != nil {
@@ -204,16 +228,16 @@ func actionInLoop(task *Task, buf *bytes.Buffer, query string, args ...interface
 		updated = 0
 	}
 
-	if task.count > 0 {
-		// clear table
-		if task.eviction {
-			_, _, err := task.dbs.ExecWithTx(tx, "truncate table slow_log")
-			if err != nil {
-				panic(err.Error())
-			}
-			log.Println("truncate table slow_log was success")
-		}
-	}
+//	if task.count > 0 {
+//		// clear table
+//		if task.eviction {
+//			_, _, err := task.dbs.ExecWithTx(tx, "truncate table slow_log")
+//			if err != nil {
+//				panic(err.Error())
+//			}
+//			log.Println("truncate table slow_log was success")
+//		}
+//	}
 
 	// tx commit
 	tx.Commit()
