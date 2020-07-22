@@ -228,16 +228,16 @@ func actionInLoop(task *Task, buf *bytes.Buffer, query string, args ...interface
 		updated = 0
 	}
 
-//	if task.count > 0 {
-//		// clear table
-//		if task.eviction {
-//			_, _, err := task.dbs.ExecWithTx(tx, "truncate table slow_log")
-//			if err != nil {
-//				panic(err.Error())
-//			}
-//			log.Println("truncate table slow_log was success")
-//		}
-//	}
+	if task.count > 0 {
+		// clear table
+		if !task.eviction {
+			_, _, err := task.dbs.ExecWithTx(tx, "truncate table slow_log")
+			if err != nil {
+				panic(err.Error())
+			}
+			log.Println("truncate table slow_log was success")
+		}
+	}
 
 	// tx commit
 	tx.Commit()
