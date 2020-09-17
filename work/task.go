@@ -2,6 +2,7 @@ package work
 
 import (
 	"bytes"
+	"container/list"
 	"encoding/json"
 	"fmt"
 	"github.com/welyss/slow-log-transfer/elasticsearch"
@@ -44,6 +45,7 @@ func NewTask(instance string, mysqlDsn string, esServices []string, intervalInSe
 	if intervalInSecond <= 0 {
 		intervalInSecond = 30
 	}
+	log.Println("Interval In Second:", intervalInSecond)
 	return &Task{instance, dbs, es, "", intervalInSecond, eviction, index, 0}
 }
 
@@ -159,11 +161,56 @@ func actionInLoop(task *Task, buf *bytes.Buffer, query string, args ...interface
 		// sql_text_short
 		// replace params of sql to ?
 		var parsedSQL string
+		slowlog.Tables = []string{"unknown"}
 		if SQLRedactLimit > 0 && len(slowlog.SqlText) > SQLRedactLimit {
 			parsedSQL = slowlog.SqlText
+			slowlog.Tables = []string{"unknown"}
 			log.Println("sql size:", len(slowlog.SqlText), "over", SQLRedactLimit, ", skip RedactSQLQuery.")
 		} else {
-			parsedSQL, _ = sqlparser.RedactSQLQuery(slowlog.SqlText)
+			parseResult, err := sqlparser.Parse(slowlog.SqlText)
+			if err == nil {
+				// parse successful
+				switch stmt := parseResult.(type) {
+				case *sqlparser.Select:
+					tables := list.New()
+					for _, tableExpr := range stmt.From {
+						fetchTables(tableExpr, tables)
+					}
+					slowlog.Tables = make([]string, tables.Len())
+					i := 0
+					for e := tables.Front(); e != nil; e = e.Next() {
+						slowlog.Tables[i] = e.Value.(string)
+						i++
+					}
+				case *sqlparser.Insert:
+					slowlog.Tables = []string{stmt.Table.Name.String()}
+				case *sqlparser.Update:
+					tables := list.New()
+					for _, tableExpr := range stmt.TableExprs {
+						fetchTables(tableExpr, tables)
+					}
+					slowlog.Tables = make([]string, tables.Len())
+					i := 0
+					for e := tables.Front(); e != nil; e = e.Next() {
+						slowlog.Tables[i] = e.Value.(string)
+						i++
+					}
+				case *sqlparser.Delete:
+					tables := list.New()
+					for _, tableExpr := range stmt.TableExprs {
+						fetchTables(tableExpr, tables)
+					}
+					slowlog.Tables = make([]string, tables.Len())
+					i := 0
+					for e := tables.Front(); e != nil; e = e.Next() {
+						slowlog.Tables[i] = e.Value.(string)
+						i++
+					}
+				default: //default case
+					slowlog.Tables = []string{"unknown"}
+				}
+			}
+			parsedSQL, err = sqlparser.RedactSQLQuery(slowlog.SqlText)
 			if err == nil && parsedSQL != "" {
 				parsedSQL = strings.Replace(parsedSQL, ":redacted", "?", -1)
 			} else {
@@ -228,16 +275,16 @@ func actionInLoop(task *Task, buf *bytes.Buffer, query string, args ...interface
 		updated = 0
 	}
 
-//	if task.count > 0 {
-//		// clear table
-//		if task.eviction {
-//			_, _, err := task.dbs.ExecWithTx(tx, "truncate table slow_log")
-//			if err != nil {
-//				panic(err.Error())
-//			}
-//			log.Println("truncate table slow_log was success")
-//		}
-//	}
+	//	if task.count > 0 {
+	//		// clear table
+	//		if task.eviction {
+	//			_, _, err := task.dbs.ExecWithTx(tx, "truncate table slow_log")
+	//			if err != nil {
+	//				panic(err.Error())
+	//			}
+	//			log.Println("truncate table slow_log was success")
+	//		}
+	//	}
 
 	// tx commit
 	tx.Commit()
@@ -245,6 +292,22 @@ func actionInLoop(task *Task, buf *bytes.Buffer, query string, args ...interface
 	// update last Point
 	if lastPointTmp > task.lastPoint {
 		task.lastPoint = lastPointTmp
+	}
+}
+
+func fetchTables(tableExpr sqlparser.TableExpr, tables *list.List) {
+	buf := sqlparser.NewTrackedBuffer(nil)
+	switch t := tableExpr.(type) {
+	case *sqlparser.AliasedTableExpr:
+		t.RemoveHints().Expr.Format(buf)
+		tables.PushBack(buf.String())
+	case *sqlparser.JoinTableExpr:
+		fetchTables(t.LeftExpr, tables)
+		fetchTables(t.RightExpr, tables)
+	case *sqlparser.ParenTableExpr:
+		for _, expr := range t.Exprs {
+			fetchTables(expr, tables)
+		}
 	}
 }
 

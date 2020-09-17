@@ -19,19 +19,20 @@ var (
 )
 
 type Slowlog struct {
-	InstanceId   string  `json:"instance_id"`
-	StartTime    string  `json:"start_time"`
-	User         string  `json:"user"`
-	Host         string  `json:"host"`
-	QueryTime    float64 `json:"query_time"`
-	LockTime     float64 `json:"lock_time"`
-	RowsSent     int64   `json:"rows_sent"`
-	RowsExamined int64   `json:"rows_examined"`
-	Db           string  `json:"db"`
-	SqlText      string  `json:"sql_text"`
-	SqlTextShort string  `json:"sql_text_short"`
-	SqlTextEncode string  `json:"sql_text_encode"`
-	ThreadId     int64   `json:"thread_id"`
+	InstanceId    string   `json:"instance_id"`
+	StartTime     string   `json:"start_time"`
+	User          string   `json:"user"`
+	Host          string   `json:"host"`
+	QueryTime     float64  `json:"query_time"`
+	LockTime      float64  `json:"lock_time"`
+	RowsSent      int64    `json:"rows_sent"`
+	RowsExamined  int64    `json:"rows_examined"`
+	Db            string   `json:"db"`
+	Tables        []string `json:"tables"`
+	SqlText       string   `json:"sql_text"`
+	SqlTextShort  string   `json:"sql_text_short"`
+	SqlTextEncode string   `json:"sql_text_encode"`
+	ThreadId      int64    `json:"thread_id"`
 }
 
 func init() {
