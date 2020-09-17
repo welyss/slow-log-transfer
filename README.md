@@ -14,3 +14,7 @@ tasks:
    - http://10.0.29.117:9200
    eviction: true
    interval: 30
+```
+![image1](https://github.com/welyss/slow-log-transfer/blob/master/mysqlslowlog-grafana-dashboard1.png?raw=true)
+![image2](https://github.com/welyss/slow-log-transfer/blob/master/mysqlslowlog-grafana-dashboard2.png?raw=true)
+![image3](https://github.com/welyss/slow-log-transfer/blob/master/mysqlslowlog-grafana-dashboard3.png?raw=true)
