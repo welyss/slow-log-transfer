@@ -1,8 +1,7 @@
 # SlowLogTransfer
  SlowLogTransfer
 mysql慢查询迁移,从mysql的mysql.slow_log表定时导出数据到elasticsearch,并在grafana中展示
-
-============================ config.yaml ============================
+```
 tasks:
 -  instance: wystest1
    index: mysql_slowlogs
