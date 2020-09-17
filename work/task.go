@@ -300,7 +300,17 @@ func fetchTables(tableExpr sqlparser.TableExpr, tables *list.List) {
 	switch t := tableExpr.(type) {
 	case *sqlparser.AliasedTableExpr:
 		t.RemoveHints().Expr.Format(buf)
-		tables.PushBack(buf.String())
+		if strings.Contains(buf.String(), " ") {
+			nestedSql := strings.TrimSuffix(strings.TrimPrefix(strings.Trim(buf.String(), " "), "("), ")")
+			if nested, err := sqlparser.Parse(nestedSql); err == nil {
+				stmt := nested.(*sqlparser.Select)
+				for _, tableExpr := range stmt.From {
+					fetchTables(tableExpr, tables)
+				}
+			}
+		} else {
+			tables.PushBack(buf.String())
+		}
 	case *sqlparser.JoinTableExpr:
 		fetchTables(t.LeftExpr, tables)
 		fetchTables(t.RightExpr, tables)
