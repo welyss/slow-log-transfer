@@ -16,448 +16,61 @@
   "editable": true,
   "gnetId": null,
   "graphTooltip": 0,
-  "id": 305,
-  "iteration": 1600333244476,
+  "id": 307,
+  "iteration": 1584349399721,
   "links": [],
   "panels": [
     {
-      "collapsed": true,
-      "datasource": null,
+      "aliasColors": {},
+      "breakPoint": "50%",
+      "cacheTimeout": null,
+      "combine": {
+        "label": "Others",
+        "threshold": 0
+      },
+      "datasource": "$datasource",
+      "description": "数据库分布",
+      "fontSize": "80%",
+      "format": "short",
       "gridPos": {
-        "h": 1,
-        "w": 24,
+        "h": 9,
+        "w": 8,
         "x": 0,
         "y": 0
       },
-      "id": 27,
-      "panels": [
-        {
-          "aliasColors": {},
-          "breakPoint": "50%",
-          "cacheTimeout": null,
-          "combine": {
-            "label": "Others",
-            "threshold": 0
-          },
-          "datasource": "$datasource",
-          "description": "数据库分布",
-          "fontSize": "80%",
-          "format": "short",
-          "gridPos": {
-            "h": 8,
-            "w": 6,
-            "x": 0,
-            "y": 1
-          },
-          "id": 13,
-          "interval": null,
-          "legend": {
-            "percentage": true,
-            "percentageDecimals": 1,
-            "show": true,
-            "sideWidth": 290,
-            "sort": "total",
-            "sortDesc": true,
-            "values": true
-          },
-          "legendType": "Under graph",
-          "links": [],
-          "maxDataPoints": 3,
-          "nullPointMode": "connected",
-          "options": {},
-          "pieType": "pie",
-          "strokeWidth": "0.1",
-          "targets": [
-            {
-              "bucketAggs": [
-                {
-                  "fake": true,
-                  "field": "db",
-                  "id": "3",
-                  "settings": {
-                    "min_doc_count": 1,
-                    "order": "desc",
-                    "orderBy": "_count",
-                    "size": "20"
-                  },
-                  "type": "terms"
-                },
-                {
-                  "field": "start_time",
-                  "id": "2",
-                  "settings": {
-                    "interval": "auto",
-                    "min_doc_count": 0,
-                    "trimEdges": 0
-                  },
-                  "type": "date_histogram"
-                }
-              ],
-              "metrics": [
-                {
-                  "field": "select field",
-                  "id": "1",
-                  "type": "count"
-                }
-              ],
-              "query": "instance_id:$instance AND db:$schema AND host:$host AND user:$user NOT sql_text_short:${filter:glob}",
-              "refId": "A",
-              "timeField": "start_time"
-            }
-          ],
-          "title": "数据库分布-Top20",
-          "type": "grafana-piechart-panel",
-          "valueName": "total"
-        },
-        {
-          "aliasColors": {},
-          "breakPoint": "50%",
-          "cacheTimeout": null,
-          "combine": {
-            "label": "Others",
-            "threshold": 0
-          },
-          "datasource": "$datasource",
-          "description": "数据库分布",
-          "fontSize": "80%",
-          "format": "short",
-          "gridPos": {
-            "h": 8,
-            "w": 6,
-            "x": 6,
-            "y": 1
-          },
-          "id": 23,
-          "interval": null,
-          "legend": {
-            "percentage": true,
-            "percentageDecimals": 1,
-            "show": true,
-            "sideWidth": 290,
-            "sort": "total",
-            "sortDesc": true,
-            "values": true
-          },
-          "legendType": "Under graph",
-          "links": [],
-          "maxDataPoints": 3,
-          "nullPointMode": "connected",
-          "options": {},
-          "pieType": "pie",
-          "strokeWidth": "0.1",
-          "targets": [
-            {
-              "bucketAggs": [
-                {
-                  "fake": true,
-                  "field": "tables",
-                  "id": "3",
-                  "settings": {
-                    "min_doc_count": 1,
-                    "order": "desc",
-                    "orderBy": "_count",
-                    "size": "20"
-                  },
-                  "type": "terms"
-                },
-                {
-                  "field": "start_time",
-                  "id": "2",
-                  "settings": {
-                    "interval": "auto",
-                    "min_doc_count": 0,
-                    "trimEdges": 0
-                  },
-                  "type": "date_histogram"
-                }
-              ],
-              "metrics": [
-                {
-                  "field": "select field",
-                  "id": "1",
-                  "type": "count"
-                }
-              ],
-              "query": "instance_id:$instance AND db:$schema AND host:$host AND user:$user NOT sql_text_short:${filter:glob}",
-              "refId": "A",
-              "timeField": "start_time"
-            }
-          ],
-          "title": "表分布-Top20",
-          "type": "grafana-piechart-panel",
-          "valueName": "total"
-        },
-        {
-          "aliasColors": {},
-          "breakPoint": "50%",
-          "cacheTimeout": null,
-          "combine": {
-            "label": "Others",
-            "threshold": "0"
-          },
-          "datasource": "$datasource",
-          "decimals": null,
-          "fontSize": "80%",
-          "format": "short",
-          "gridPos": {
-            "h": 8,
-            "w": 6,
-            "x": 12,
-            "y": 1
-          },
-          "id": 18,
-          "interval": null,
-          "legend": {
-            "percentage": true,
-            "percentageDecimals": 1,
-            "show": true,
-            "sideWidth": 290,
-            "sort": "total",
-            "sortDesc": true,
-            "values": true
-          },
-          "legendType": "Under graph",
-          "links": [],
-          "maxDataPoints": 3,
-          "nullPointMode": "connected",
-          "options": {},
-          "pieType": "pie",
-          "strokeWidth": "0.1",
-          "targets": [
-            {
-              "bucketAggs": [
-                {
-                  "fake": true,
-                  "field": "host",
-                  "id": "3",
-                  "settings": {
-                    "min_doc_count": 1,
-                    "order": "desc",
-                    "orderBy": "_count",
-                    "size": "20"
-                  },
-                  "type": "terms"
-                },
-                {
-                  "field": "start_time",
-                  "id": "2",
-                  "settings": {
-                    "interval": "auto",
-                    "min_doc_count": 0,
-                    "trimEdges": 0
-                  },
-                  "type": "date_histogram"
-                }
-              ],
-              "metrics": [
-                {
-                  "field": "select field",
-                  "id": "1",
-                  "type": "count"
-                }
-              ],
-              "query": "instance_id:$instance AND db:$schema AND host:$host AND user:$user NOT sql_text_short:${filter:glob}",
-              "refId": "A",
-              "timeField": "start_time"
-            }
-          ],
-          "title": "客户端分布-Top20",
-          "type": "grafana-piechart-panel",
-          "valueName": "total"
-        },
-        {
-          "aliasColors": {},
-          "breakPoint": "50%",
-          "cacheTimeout": null,
-          "combine": {
-            "label": "Others",
-            "threshold": "0"
-          },
-          "datasource": "$datasource",
-          "decimals": null,
-          "fontSize": "80%",
-          "format": "short",
-          "gridPos": {
-            "h": 8,
-            "w": 6,
-            "x": 18,
-            "y": 1
-          },
-          "id": 21,
-          "interval": null,
-          "legend": {
-            "percentage": true,
-            "percentageDecimals": 1,
-            "show": true,
-            "sideWidth": 290,
-            "sort": "total",
-            "sortDesc": true,
-            "values": true
-          },
-          "legendType": "Under graph",
-          "links": [],
-          "maxDataPoints": 3,
-          "nullPointMode": "connected",
-          "options": {},
-          "pieType": "pie",
-          "strokeWidth": "0.1",
-          "targets": [
-            {
-              "bucketAggs": [
-                {
-                  "fake": true,
-                  "field": "user",
-                  "id": "3",
-                  "settings": {
-                    "min_doc_count": 1,
-                    "order": "desc",
-                    "orderBy": "_count",
-                    "size": "20"
-                  },
-                  "type": "terms"
-                },
-                {
-                  "field": "start_time",
-                  "id": "2",
-                  "settings": {
-                    "interval": "auto",
-                    "min_doc_count": 0,
-                    "trimEdges": 0
-                  },
-                  "type": "date_histogram"
-                }
-              ],
-              "metrics": [
-                {
-                  "field": "select field",
-                  "id": "1",
-                  "type": "count"
-                }
-              ],
-              "query": "instance_id:$instance AND db:$schema AND host:$host AND user:$user NOT sql_text_short:${filter:glob}",
-              "refId": "A",
-              "timeField": "start_time"
-            }
-          ],
-          "title": "用户分布-Top20",
-          "type": "grafana-piechart-panel",
-          "valueName": "total"
-        }
-      ],
-      "title": "Pie Chart",
-      "type": "row"
-    },
-    {
-      "collapsed": false,
-      "datasource": null,
-      "gridPos": {
-        "h": 1,
-        "w": 24,
-        "x": 0,
-        "y": 1
+      "id": 13,
+      "interval": null,
+      "legend": {
+        "percentage": true,
+        "percentageDecimals": 1,
+        "show": true,
+        "sideWidth": 290,
+        "sort": "total",
+        "sortDesc": true,
+        "values": true
       },
-      "id": 25,
-      "panels": [],
-      "title": "Statistic",
-      "type": "row"
-    },
-    {
-      "datasource": "$datasource",
-      "description": "慢查询执行时长次数三维立体图",
-      "gridPos": {
-        "h": 13,
-        "w": 8,
-        "x": 0,
-        "y": 2
-      },
-      "id": 22,
+      "legendType": "Right side",
       "links": [],
+      "maxDataPoints": 3,
+      "nullPointMode": "connected",
       "options": {},
-      "pconfig": {
-        "fixScale": "",
-        "layout": {
-          "dragmode": "pan",
-          "font": {
-            "family": "\"Open Sans\", Helvetica, Arial, sans-serif"
-          },
-          "hovermode": "closest",
-          "legend": {
-            "orientation": "h"
-          },
-          "showlegend": false,
-          "xaxis": {
-            "rangemode": "normal",
-            "showgrid": true,
-            "title": "时间",
-            "type": "date",
-            "zeroline": true
-          },
-          "yaxis": {
-            "rangemode": "normal",
-            "showgrid": true,
-            "title": "查询次数",
-            "type": "linear",
-            "zeroline": true
-          },
-          "zaxis": {
-            "rangemode": "normal",
-            "showgrid": true,
-            "title": "平均查询时间(秒)",
-            "type": "linear",
-            "zeroline": true
-          }
-        },
-        "loadFromCDN": false,
-        "settings": {
-          "displayModeBar": false,
-          "type": "scatter3d"
-        },
-        "showAnnotations": false,
-        "traces": [
-          {
-            "mapping": {
-              "color": "Average query_time",
-              "size": null,
-              "text": null,
-              "x": "Average query_time@time",
-              "y": "Count",
-              "z": "Average query_time"
-            },
-            "name": "Trace 1",
-            "settings": {
-              "color_option": "ramp",
-              "line": {
-                "color": "#005f81",
-                "dash": "solid",
-                "shape": "linear",
-                "width": 6
-              },
-              "marker": {
-                "color": "#33B5E5",
-                "colorscale": "Blackbody",
-                "line": {
-                  "color": "#DDD",
-                  "width": 0
-                },
-                "showscale": false,
-                "size": 5,
-                "sizemin": 3,
-                "sizemode": "diameter",
-                "sizeref": 0.2,
-                "symbol": "circle"
-              }
-            },
-            "show": {
-              "line": true,
-              "lines": false,
-              "markers": true
-            }
-          }
-        ]
-      },
+      "pieType": "pie",
+      "strokeWidth": "0.1",
       "targets": [
         {
           "bucketAggs": [
+            {
+              "fake": true,
+              "field": "db",
+              "id": "3",
+              "settings": {
+                "min_doc_count": 1,
+                "order": "desc",
+                "orderBy": "_term",
+                "size": "20"
+              },
+              "type": "terms"
+            },
             {
               "field": "start_time",
               "id": "2",
@@ -469,19 +82,10 @@
               "type": "date_histogram"
             }
           ],
-          "hide": false,
           "metrics": [
             {
-              "field": "query_time",
-              "id": "1",
-              "inlineScript": null,
-              "meta": {},
-              "settings": {},
-              "type": "avg"
-            },
-            {
               "field": "select field",
-              "id": "3",
+              "id": "1",
               "type": "count"
             }
           ],
@@ -490,9 +94,165 @@
           "timeField": "start_time"
         }
       ],
-      "title": "慢查询执行时长次数三维立体图",
-      "type": "natel-plotly-panel",
-      "version": 1
+      "title": "数据库分布-Top20",
+      "type": "grafana-piechart-panel",
+      "valueName": "total"
+    },
+    {
+      "aliasColors": {},
+      "breakPoint": "50%",
+      "cacheTimeout": null,
+      "combine": {
+        "label": "Others",
+        "threshold": "0"
+      },
+      "datasource": "$datasource",
+      "decimals": null,
+      "fontSize": "80%",
+      "format": "short",
+      "gridPos": {
+        "h": 9,
+        "w": 8,
+        "x": 8,
+        "y": 0
+      },
+      "id": 21,
+      "interval": null,
+      "legend": {
+        "percentage": true,
+        "percentageDecimals": 1,
+        "show": true,
+        "sideWidth": 290,
+        "sort": "total",
+        "sortDesc": true,
+        "values": true
+      },
+      "legendType": "Right side",
+      "links": [],
+      "maxDataPoints": 3,
+      "nullPointMode": "connected",
+      "options": {},
+      "pieType": "pie",
+      "strokeWidth": "0.1",
+      "targets": [
+        {
+          "bucketAggs": [
+            {
+              "fake": true,
+              "field": "user",
+              "id": "3",
+              "settings": {
+                "min_doc_count": 1,
+                "order": "desc",
+                "orderBy": "_term",
+                "size": "20"
+              },
+              "type": "terms"
+            },
+            {
+              "field": "start_time",
+              "id": "2",
+              "settings": {
+                "interval": "auto",
+                "min_doc_count": 0,
+                "trimEdges": 0
+              },
+              "type": "date_histogram"
+            }
+          ],
+          "metrics": [
+            {
+              "field": "select field",
+              "id": "1",
+              "type": "count"
+            }
+          ],
+          "query": "instance_id:$instance AND db:$schema AND host:$host AND user:$user NOT sql_text_short:${filter:glob}",
+          "refId": "A",
+          "timeField": "start_time"
+        }
+      ],
+      "title": "用户分布-Top20",
+      "type": "grafana-piechart-panel",
+      "valueName": "total"
+    },
+    {
+      "aliasColors": {},
+      "breakPoint": "50%",
+      "cacheTimeout": null,
+      "combine": {
+        "label": "Others",
+        "threshold": "0"
+      },
+      "datasource": "$datasource",
+      "decimals": null,
+      "fontSize": "80%",
+      "format": "short",
+      "gridPos": {
+        "h": 9,
+        "w": 8,
+        "x": 16,
+        "y": 0
+      },
+      "id": 18,
+      "interval": null,
+      "legend": {
+        "percentage": true,
+        "percentageDecimals": 1,
+        "show": true,
+        "sideWidth": 290,
+        "sort": "total",
+        "sortDesc": true,
+        "values": true
+      },
+      "legendType": "Right side",
+      "links": [],
+      "maxDataPoints": 3,
+      "nullPointMode": "connected",
+      "options": {},
+      "pieType": "pie",
+      "strokeWidth": "0.1",
+      "targets": [
+        {
+          "bucketAggs": [
+            {
+              "fake": true,
+              "field": "host",
+              "id": "3",
+              "settings": {
+                "min_doc_count": 1,
+                "order": "desc",
+                "orderBy": "_term",
+                "size": "20"
+              },
+              "type": "terms"
+            },
+            {
+              "field": "start_time",
+              "id": "2",
+              "settings": {
+                "interval": "auto",
+                "min_doc_count": 0,
+                "trimEdges": 0
+              },
+              "type": "date_histogram"
+            }
+          ],
+          "metrics": [
+            {
+              "field": "select field",
+              "id": "1",
+              "type": "count"
+            }
+          ],
+          "query": "instance_id:$instance AND db:$schema AND host:$host AND user:$user NOT sql_text_short:${filter:glob}",
+          "refId": "A",
+          "timeField": "start_time"
+        }
+      ],
+      "title": "客户端分布-Top20",
+      "type": "grafana-piechart-panel",
+      "valueName": "total"
     },
     {
       "cards": {
@@ -503,16 +263,16 @@
         "cardColor": "#3274D9",
         "colorScale": "sqrt",
         "colorScheme": "interpolateGreys",
-        "exponent": 0.5,
+        "exponent": 0.6,
         "mode": "opacity"
       },
       "dataFormat": "timeseries",
       "datasource": "$datasource",
       "gridPos": {
-        "h": 6,
-        "w": 16,
-        "x": 8,
-        "y": 2
+        "h": 7,
+        "w": 24,
+        "x": 0,
+        "y": 9
       },
       "heatmap": {},
       "hideZeroBuckets": false,
@@ -599,10 +359,10 @@
       "fill": 1,
       "fillGradient": 0,
       "gridPos": {
-        "h": 7,
-        "w": 16,
-        "x": 8,
-        "y": 8
+        "h": 9,
+        "w": 24,
+        "x": 0,
+        "y": 16
       },
       "hiddenSeries": false,
       "id": 20,
@@ -711,366 +471,343 @@
       }
     },
     {
-      "collapsed": true,
-      "datasource": null,
+      "columns": [],
+      "datasource": "$datasource",
+      "fontSize": "80%",
       "gridPos": {
-        "h": 1,
+        "h": 15,
         "w": 24,
         "x": 0,
-        "y": 15
+        "y": 25
       },
-      "id": 29,
-      "panels": [
+      "id": 16,
+      "links": [],
+      "options": {},
+      "pageSize": 20,
+      "scroll": true,
+      "showHeader": true,
+      "sort": {
+        "col": null,
+        "desc": false
+      },
+      "styles": [
         {
-          "columns": [],
-          "datasource": "$datasource",
-          "fontSize": "80%",
-          "gridPos": {
-            "h": 13,
-            "w": 24,
-            "x": 0,
-            "y": 3
-          },
-          "id": 16,
-          "links": [],
-          "options": {},
-          "pageSize": 20,
-          "scroll": true,
-          "showHeader": true,
-          "sort": {
-            "col": 10,
-            "desc": true
-          },
-          "styles": [
-            {
-              "alias": "Sql_Text_Short",
-              "colorMode": null,
-              "dateFormat": "YYYY-MM-DD HH:mm:ss.SSS",
-              "link": true,
-              "linkTargetBlank": true,
-              "linkTooltip": "",
-              "linkUrl": "d/u5fFrYbWz/mysql-slowlog-detail?var-sqltext=${__cell_3:raw}&var-env=$env&var-instance=${__cell_0}&var-schema=${__cell_1}&from=$__from&to=$__to",
-              "mappingType": 1,
-              "pattern": "sql_text_short",
-              "preserveFormat": false,
-              "rangeMaps": [],
-              "sanitize": false,
-              "thresholds": [
-                ""
-              ],
-              "type": "string"
-            },
-            {
-              "alias": "次数",
-              "colorMode": null,
-              "colors": [
-                "rgba(245, 54, 54, 0.9)",
-                "rgba(237, 129, 40, 0.89)",
-                "rgba(50, 172, 45, 0.97)"
-              ],
-              "dateFormat": "YYYY-MM-DD HH:mm:ss",
-              "decimals": 0,
-              "mappingType": 1,
-              "pattern": "Count",
-              "thresholds": [],
-              "type": "number",
-              "unit": "none"
-            },
-            {
-              "alias": "最大时长",
-              "colorMode": null,
-              "colors": [
-                "rgba(245, 54, 54, 0.9)",
-                "rgba(237, 129, 40, 0.89)",
-                "rgba(50, 172, 45, 0.97)"
-              ],
-              "dateFormat": "YYYY-MM-DD HH:mm:ss",
-              "decimals": 2,
-              "mappingType": 1,
-              "pattern": "Max query_time",
-              "thresholds": [],
-              "type": "number",
-              "unit": "s"
-            },
-            {
-              "alias": "总时长",
-              "colorMode": null,
-              "colors": [
-                "rgba(245, 54, 54, 0.9)",
-                "rgba(237, 129, 40, 0.89)",
-                "rgba(50, 172, 45, 0.97)"
-              ],
-              "dateFormat": "YYYY-MM-DD HH:mm:ss",
-              "decimals": 2,
-              "mappingType": 1,
-              "pattern": "Sum query_time",
-              "thresholds": [],
-              "type": "number",
-              "unit": "s"
-            },
-            {
-              "alias": "最大锁",
-              "colorMode": null,
-              "colors": [
-                "rgba(245, 54, 54, 0.9)",
-                "rgba(237, 129, 40, 0.89)",
-                "rgba(50, 172, 45, 0.97)"
-              ],
-              "dateFormat": "YYYY-MM-DD HH:mm:ss",
-              "decimals": 2,
-              "mappingType": 1,
-              "pattern": "Max lock_time",
-              "thresholds": [],
-              "type": "number",
-              "unit": "s"
-            },
-            {
-              "alias": "总锁",
-              "colorMode": null,
-              "colors": [
-                "rgba(245, 54, 54, 0.9)",
-                "rgba(237, 129, 40, 0.89)",
-                "rgba(50, 172, 45, 0.97)"
-              ],
-              "dateFormat": "YYYY-MM-DD HH:mm:ss",
-              "decimals": 2,
-              "mappingType": 1,
-              "pattern": "Sum lock_time",
-              "thresholds": [],
-              "type": "number",
-              "unit": "s"
-            },
-            {
-              "alias": "最大解析",
-              "colorMode": null,
-              "colors": [
-                "rgba(245, 54, 54, 0.9)",
-                "rgba(237, 129, 40, 0.89)",
-                "rgba(50, 172, 45, 0.97)"
-              ],
-              "dateFormat": "YYYY-MM-DD HH:mm:ss",
-              "decimals": 0,
-              "mappingType": 1,
-              "pattern": "Max rows_examined",
-              "thresholds": [],
-              "type": "number",
-              "unit": "none"
-            },
-            {
-              "alias": "总解析",
-              "colorMode": null,
-              "colors": [
-                "rgba(245, 54, 54, 0.9)",
-                "rgba(237, 129, 40, 0.89)",
-                "rgba(50, 172, 45, 0.97)"
-              ],
-              "dateFormat": "YYYY-MM-DD HH:mm:ss",
-              "decimals": 0,
-              "mappingType": 1,
-              "pattern": "Sum rows_examined",
-              "thresholds": [],
-              "type": "number",
-              "unit": "none"
-            },
-            {
-              "alias": "最大返回",
-              "colorMode": null,
-              "colors": [
-                "rgba(245, 54, 54, 0.9)",
-                "rgba(237, 129, 40, 0.89)",
-                "rgba(50, 172, 45, 0.97)"
-              ],
-              "dateFormat": "YYYY-MM-DD HH:mm:ss",
-              "decimals": 0,
-              "mappingType": 1,
-              "pattern": "Max rows_sent",
-              "thresholds": [],
-              "type": "number",
-              "unit": "none"
-            },
-            {
-              "alias": "总返回",
-              "colorMode": null,
-              "colors": [
-                "rgba(245, 54, 54, 0.9)",
-                "rgba(237, 129, 40, 0.89)",
-                "rgba(50, 172, 45, 0.97)"
-              ],
-              "dateFormat": "YYYY-MM-DD HH:mm:ss",
-              "decimals": 0,
-              "mappingType": 1,
-              "pattern": "Sum rows_sent",
-              "thresholds": [],
-              "type": "number",
-              "unit": "none"
-            },
-            {
-              "alias": "",
-              "colorMode": null,
-              "colors": [
-                "rgba(245, 54, 54, 0.9)",
-                "rgba(237, 129, 40, 0.89)",
-                "rgba(50, 172, 45, 0.97)"
-              ],
-              "dateFormat": "YYYY-MM-DD HH:mm:ss",
-              "decimals": 2,
-              "mappingType": 1,
-              "pattern": "sql_text_encode",
-              "thresholds": [],
-              "type": "hidden",
-              "unit": "short"
-            }
+          "alias": "Sql_Text_Short",
+          "colorMode": null,
+          "dateFormat": "YYYY-MM-DD HH:mm:ss.SSS",
+          "link": true,
+          "linkTargetBlank": true,
+          "linkTooltip": "",
+          "linkUrl": "d/UlslF-bZz/mysql-slowlog-detail?var-sqltext=${__cell_3:raw}&var-env=$env&var-instance=${__cell_0}&var-schema=${__cell_1}&from=$__from&to=$__to",
+          "mappingType": 1,
+          "pattern": "sql_text_short",
+          "preserveFormat": false,
+          "rangeMaps": [],
+          "sanitize": false,
+          "thresholds": [
+            ""
           ],
-          "targets": [
-            {
-              "bucketAggs": [
-                {
-                  "fake": true,
-                  "field": "instance_id",
-                  "id": "11",
-                  "settings": {
-                    "min_doc_count": 1,
-                    "order": "desc",
-                    "orderBy": "15",
-                    "size": "0"
-                  },
-                  "type": "terms"
-                },
-                {
-                  "fake": true,
-                  "field": "db",
-                  "id": "12",
-                  "settings": {
-                    "min_doc_count": 1,
-                    "order": "desc",
-                    "orderBy": "15",
-                    "size": "0"
-                  },
-                  "type": "terms"
-                },
-                {
-                  "fake": true,
-                  "field": "sql_text_short",
-                  "id": "22",
-                  "settings": {
-                    "min_doc_count": 1,
-                    "order": "desc",
-                    "orderBy": "15",
-                    "size": "0"
-                  },
-                  "type": "terms"
-                },
-                {
-                  "fake": true,
-                  "field": "sql_text_encode",
-                  "id": "9",
-                  "settings": {
-                    "min_doc_count": 1,
-                    "order": "desc",
-                    "orderBy": "15",
-                    "size": "0"
-                  },
-                  "type": "terms"
-                }
-              ],
-              "hide": false,
-              "metrics": [
-                {
-                  "field": "query_time",
-                  "id": "10",
-                  "meta": {},
-                  "settings": {},
-                  "type": "count"
-                },
-                {
-                  "field": "query_time",
-                  "id": "13",
-                  "inlineScript": "(_value == 0 ? 0.2 : _value)",
-                  "meta": {},
-                  "settings": {
-                    "script": {
-                      "inline": "(_value == 0 ? 0.2 : _value)"
-                    }
-                  },
-                  "type": "max"
-                },
-                {
-                  "field": "query_time",
-                  "id": "15",
-                  "inlineScript": "(_value == 0 ? 0.2 : _value)",
-                  "meta": {},
-                  "settings": {
-                    "script": {
-                      "inline": "(_value == 0 ? 0.2 : _value)"
-                    }
-                  },
-                  "type": "sum"
-                },
-                {
-                  "field": "lock_time",
-                  "id": "16",
-                  "inlineScript": "(_value == 0 ? 0.2 : _value)",
-                  "meta": {},
-                  "settings": {
-                    "script": {
-                      "inline": "(_value == 0 ? 0.2 : _value)"
-                    }
-                  },
-                  "type": "max"
-                },
-                {
-                  "field": "lock_time",
-                  "id": "17",
-                  "inlineScript": "(_value == 0 ? 0.2 : _value)",
-                  "meta": {},
-                  "settings": {
-                    "script": {
-                      "inline": "(_value == 0 ? 0.2 : _value)"
-                    }
-                  },
-                  "type": "sum"
-                },
-                {
-                  "field": "rows_examined",
-                  "id": "18",
-                  "meta": {},
-                  "settings": {},
-                  "type": "max"
-                },
-                {
-                  "field": "rows_examined",
-                  "id": "19",
-                  "meta": {},
-                  "settings": {},
-                  "type": "sum"
-                },
-                {
-                  "field": "rows_sent",
-                  "id": "20",
-                  "meta": {},
-                  "settings": {},
-                  "type": "max"
-                },
-                {
-                  "field": "rows_sent",
-                  "id": "21",
-                  "meta": {},
-                  "settings": {},
-                  "type": "sum"
-                }
-              ],
-              "query": "instance_id:$instance AND db:$schema AND host:$host AND user:$user NOT sql_text_short:${filter:glob}",
-              "refId": "A",
-              "timeField": "start_time"
-            }
+          "type": "string"
+        },
+        {
+          "alias": "次数",
+          "colorMode": null,
+          "colors": [
+            "rgba(245, 54, 54, 0.9)",
+            "rgba(237, 129, 40, 0.89)",
+            "rgba(50, 172, 45, 0.97)"
           ],
-          "title": "查询时长Top",
-          "transform": "table",
-          "type": "table"
+          "dateFormat": "YYYY-MM-DD HH:mm:ss",
+          "decimals": 0,
+          "mappingType": 1,
+          "pattern": "Count",
+          "thresholds": [],
+          "type": "number",
+          "unit": "none"
+        },
+        {
+          "alias": "最大时长",
+          "colorMode": null,
+          "colors": [
+            "rgba(245, 54, 54, 0.9)",
+            "rgba(237, 129, 40, 0.89)",
+            "rgba(50, 172, 45, 0.97)"
+          ],
+          "dateFormat": "YYYY-MM-DD HH:mm:ss",
+          "decimals": 2,
+          "mappingType": 1,
+          "pattern": "Max query_time",
+          "thresholds": [],
+          "type": "number",
+          "unit": "s"
+        },
+        {
+          "alias": "总时长",
+          "colorMode": null,
+          "colors": [
+            "rgba(245, 54, 54, 0.9)",
+            "rgba(237, 129, 40, 0.89)",
+            "rgba(50, 172, 45, 0.97)"
+          ],
+          "dateFormat": "YYYY-MM-DD HH:mm:ss",
+          "decimals": 2,
+          "mappingType": 1,
+          "pattern": "Sum query_time",
+          "thresholds": [],
+          "type": "number",
+          "unit": "s"
+        },
+        {
+          "alias": "最大锁",
+          "colorMode": null,
+          "colors": [
+            "rgba(245, 54, 54, 0.9)",
+            "rgba(237, 129, 40, 0.89)",
+            "rgba(50, 172, 45, 0.97)"
+          ],
+          "dateFormat": "YYYY-MM-DD HH:mm:ss",
+          "decimals": 2,
+          "mappingType": 1,
+          "pattern": "Max lock_time",
+          "thresholds": [],
+          "type": "number",
+          "unit": "s"
+        },
+        {
+          "alias": "总锁",
+          "colorMode": null,
+          "colors": [
+            "rgba(245, 54, 54, 0.9)",
+            "rgba(237, 129, 40, 0.89)",
+            "rgba(50, 172, 45, 0.97)"
+          ],
+          "dateFormat": "YYYY-MM-DD HH:mm:ss",
+          "decimals": 2,
+          "mappingType": 1,
+          "pattern": "Sum lock_time",
+          "thresholds": [],
+          "type": "number",
+          "unit": "s"
+        },
+        {
+          "alias": "最大解析",
+          "colorMode": null,
+          "colors": [
+            "rgba(245, 54, 54, 0.9)",
+            "rgba(237, 129, 40, 0.89)",
+            "rgba(50, 172, 45, 0.97)"
+          ],
+          "dateFormat": "YYYY-MM-DD HH:mm:ss",
+          "decimals": 0,
+          "mappingType": 1,
+          "pattern": "Max rows_examined",
+          "thresholds": [],
+          "type": "number",
+          "unit": "none"
+        },
+        {
+          "alias": "总解析",
+          "colorMode": null,
+          "colors": [
+            "rgba(245, 54, 54, 0.9)",
+            "rgba(237, 129, 40, 0.89)",
+            "rgba(50, 172, 45, 0.97)"
+          ],
+          "dateFormat": "YYYY-MM-DD HH:mm:ss",
+          "decimals": 0,
+          "mappingType": 1,
+          "pattern": "Sum rows_examined",
+          "thresholds": [],
+          "type": "number",
+          "unit": "none"
+        },
+        {
+          "alias": "最大返回",
+          "colorMode": null,
+          "colors": [
+            "rgba(245, 54, 54, 0.9)",
+            "rgba(237, 129, 40, 0.89)",
+            "rgba(50, 172, 45, 0.97)"
+          ],
+          "dateFormat": "YYYY-MM-DD HH:mm:ss",
+          "decimals": 0,
+          "mappingType": 1,
+          "pattern": "Max rows_sent",
+          "thresholds": [],
+          "type": "number",
+          "unit": "none"
+        },
+        {
+          "alias": "总返回",
+          "colorMode": null,
+          "colors": [
+            "rgba(245, 54, 54, 0.9)",
+            "rgba(237, 129, 40, 0.89)",
+            "rgba(50, 172, 45, 0.97)"
+          ],
+          "dateFormat": "YYYY-MM-DD HH:mm:ss",
+          "decimals": 0,
+          "mappingType": 1,
+          "pattern": "Sum rows_sent",
+          "thresholds": [],
+          "type": "number",
+          "unit": "none"
+        },
+        {
+          "alias": "",
+          "colorMode": null,
+          "colors": [
+            "rgba(245, 54, 54, 0.9)",
+            "rgba(237, 129, 40, 0.89)",
+            "rgba(50, 172, 45, 0.97)"
+          ],
+          "dateFormat": "YYYY-MM-DD HH:mm:ss",
+          "decimals": 2,
+          "mappingType": 1,
+          "pattern": "sql_text_encode",
+          "thresholds": [],
+          "type": "hidden",
+          "unit": "short"
         }
       ],
-      "title": "Main",
-      "type": "row"
+      "targets": [
+        {
+          "bucketAggs": [
+            {
+              "fake": true,
+              "field": "instance_id",
+              "id": "11",
+              "settings": {
+                "min_doc_count": 1,
+                "order": "desc",
+                "orderBy": "15",
+                "size": "0"
+              },
+              "type": "terms"
+            },
+            {
+              "fake": true,
+              "field": "db",
+              "id": "12",
+              "settings": {
+                "min_doc_count": 1,
+                "order": "desc",
+                "orderBy": "15",
+                "size": "0"
+              },
+              "type": "terms"
+            },
+            {
+              "fake": true,
+              "field": "sql_text_short",
+              "id": "22",
+              "settings": {
+                "min_doc_count": 1,
+                "order": "desc",
+                "orderBy": "15",
+                "size": "0"
+              },
+              "type": "terms"
+            },
+            {
+              "fake": true,
+              "field": "sql_text_encode",
+              "id": "9",
+              "settings": {
+                "min_doc_count": 1,
+                "order": "desc",
+                "orderBy": "15",
+                "size": "0"
+              },
+              "type": "terms"
+            }
+          ],
+          "hide": false,
+          "metrics": [
+            {
+              "field": "query_time",
+              "id": "10",
+              "meta": {},
+              "settings": {},
+              "type": "count"
+            },
+            {
+              "field": "query_time",
+              "id": "13",
+              "inlineScript": "(_value == 0 ? 0.2 : _value)",
+              "meta": {},
+              "settings": {
+                "script": {
+                  "inline": "(_value == 0 ? 0.2 : _value)"
+                }
+              },
+              "type": "max"
+            },
+            {
+              "field": "query_time",
+              "id": "15",
+              "inlineScript": "(_value == 0 ? 0.2 : _value)",
+              "meta": {},
+              "settings": {
+                "script": {
+                  "inline": "(_value == 0 ? 0.2 : _value)"
+                }
+              },
+              "type": "sum"
+            },
+            {
+              "field": "lock_time",
+              "id": "16",
+              "inlineScript": null,
+              "meta": {},
+              "settings": {},
+              "type": "max"
+            },
+            {
+              "field": "lock_time",
+              "id": "17",
+              "inlineScript": null,
+              "meta": {},
+              "settings": {},
+              "type": "sum"
+            },
+            {
+              "field": "rows_examined",
+              "id": "18",
+              "meta": {},
+              "settings": {},
+              "type": "max"
+            },
+            {
+              "field": "rows_examined",
+              "id": "19",
+              "meta": {},
+              "settings": {},
+              "type": "sum"
+            },
+            {
+              "field": "rows_sent",
+              "id": "20",
+              "meta": {},
+              "settings": {},
+              "type": "max"
+            },
+            {
+              "field": "rows_sent",
+              "id": "21",
+              "meta": {},
+              "settings": {},
+              "type": "sum"
+            }
+          ],
+          "query": "instance_id:$instance AND db:$schema AND host:$host AND user:$user NOT sql_text_short:${filter:glob}",
+          "refId": "A",
+          "timeField": "start_time"
+        }
+      ],
+      "title": "查询时长Top",
+      "transform": "table",
+      "type": "table"
     }
   ],
   "refresh": false,
@@ -1078,8 +815,7 @@
   "style": "dark",
   "tags": [
     "MySQL",
-    "SlowLog",
-    "Hbec"
+    "SlowLog"
   ],
   "templating": {
     "list": [
@@ -1087,8 +823,8 @@
         "allValue": null,
         "current": {
           "selected": true,
-          "text": "Dev",
-          "value": "Dev"
+          "text": "Prod",
+          "value": "Prod"
         },
         "hide": 0,
         "includeAll": false,
@@ -1097,7 +833,7 @@
         "name": "env",
         "options": [
           {
-            "selected": true,
+            "selected": false,
             "text": "Dev",
             "value": "Dev"
           },
@@ -1107,7 +843,7 @@
             "value": "Simu"
           },
           {
-            "selected": false,
+            "selected": true,
             "text": "Prod",
             "value": "Prod"
           }
@@ -1118,9 +854,8 @@
       },
       {
         "current": {
-          "selected": true,
-          "text": "Dev-mysqlslow",
-          "value": "Dev-mysqlslow"
+          "text": "Prod-mysqlslow",
+          "value": "Prod-mysqlslow"
         },
         "hide": 2,
         "includeAll": false,
@@ -1244,7 +979,7 @@
       },
       {
         "current": {
-          "selected": true,
+          "selected": false,
           "text": "(\"Binlog Dump\",\"Binlog Dump GTID\",\"Sleep\", \"commit\")",
           "value": "(\"Binlog Dump\",\"Binlog Dump GTID\",\"Sleep\", \"commit\")"
         },
@@ -1295,6 +1030,6 @@
   },
   "timezone": "",
   "title": "MySQL-SlowLog",
-  "uid": "1fnopZxZk",
-  "version": 120
+  "uid": "y_usWFxWk",
+  "version": 29
 }

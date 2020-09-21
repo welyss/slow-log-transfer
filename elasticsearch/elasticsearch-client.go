@@ -2,11 +2,15 @@ package elasticsearch
 
 import (
 	"github.com/elastic/go-elasticsearch/v5"
+	"net/http"
 	//	"github.com/elastic/go-elasticsearch/v5/esapi"
 	"bytes"
 	"encoding/json"
 	"log"
 	"os"
+	//	"crypto/tls"
+	"time"
+	"net"
 )
 
 type ESService struct {
@@ -35,6 +39,11 @@ type bulkResponse struct {
 func NewESService(address []string) *ESService {
 	cfg := elasticsearch.Config{
 		Addresses: address,
+		Transport: &http.Transport{
+			MaxIdleConnsPerHost:   10,
+			ResponseHeaderTimeout: 5* 60 * time.Second,
+			DialContext:           (&net.Dialer{Timeout: 5* 60 * time.Second}).DialContext,
+		},
 	}
 	es, err := elasticsearch.NewClient(cfg)
 	if err != nil {

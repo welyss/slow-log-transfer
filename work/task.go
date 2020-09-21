@@ -77,7 +77,7 @@ func (task *Task) Run(stopSignal <-chan int) {
 func actionInLoop(task *Task, buf *bytes.Buffer, query string, args ...interface{}) {
 	defer func() {
 		if err := recover(); err != nil {
-			log.Printf("***** loop panic, loop will be continue: %v *****", err)
+			log.Printf("***** %s loop panic, loop will be continue: %v *****", task.instance, err)
 		}
 
 		// wait for next
@@ -260,7 +260,7 @@ func actionInLoop(task *Task, buf *bytes.Buffer, query string, args ...interface
 
 	defer func() {
 		if err := recover(); err != nil {
-			log.Printf("transaction inner loop panic, tx rollback: %v", err)
+			log.Printf("instance:[%s] transaction inner loop panic, tx rollback: %v", task.instance, err)
 			tx.Rollback()
 		}
 	}()
@@ -303,9 +303,18 @@ func fetchTables(tableExpr sqlparser.TableExpr, tables *list.List) {
 		if strings.Contains(buf.String(), " ") {
 			nestedSql := strings.TrimSuffix(strings.TrimPrefix(strings.Trim(buf.String(), " "), "("), ")")
 			if nested, err := sqlparser.Parse(nestedSql); err == nil {
-				stmt := nested.(*sqlparser.Select)
-				for _, tableExpr := range stmt.From {
-					fetchTables(tableExpr, tables)
+				switch stmt := nested.(type) {
+				case *sqlparser.Select:
+					for _, tableExpr := range stmt.From {
+						fetchTables(tableExpr, tables)
+					}
+				case *sqlparser.Union:
+					for _, tableExpr := range stmt.Left.(*sqlparser.Select).From {
+						fetchTables(tableExpr, tables)
+					}
+					for _, tableExpr := range stmt.Right.(*sqlparser.Select).From {
+						fetchTables(tableExpr, tables)
+					}
 				}
 			}
 		} else {
