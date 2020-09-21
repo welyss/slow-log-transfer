@@ -14,3 +14,8 @@ tasks:
    - http://10.0.29.117:9200
    eviction: true
    interval: 30
+```
+
+![image1](mysqlslowlog-grafana-dashboard1.png)
+![image2](mysqlslowlog-grafana-dashboard2.png)
+![image3](mysqlslowlog-grafana-dashboard3.png)
