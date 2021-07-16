@@ -9,7 +9,8 @@ import (
 
 const (
 	TimeLayout     = "15:04:05.999999"
-	FullTimeLayout = "2006-01-02 15:04:05.999999"
+	FullTimeLayout = "2006-01-02 15:04:05.999999-0700"
+	DateTimeLayout = "2006-01-02 15:04:05.999999"
 	ZeroTime       = "0000-01-01 00:00:00.000000"
 )
 
@@ -37,7 +38,7 @@ type Slowlog struct {
 
 func init() {
 	var err error
-	zero, err = time.ParseInLocation(FullTimeLayout, ZeroTime, time.Local)
+	zero, err = time.ParseInLocation(DateTimeLayout, ZeroTime, time.Local)
 	if err != nil {
 		log.Fatal("zero time parse error.", err.Error())
 	}

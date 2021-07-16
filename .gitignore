@@ -1,4 +1,6 @@
-
+/.project
+/bin/
+/*.exe
 vendor
 config.yaml
 go.sum

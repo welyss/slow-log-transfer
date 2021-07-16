@@ -5,15 +5,16 @@ import (
 	"container/list"
 	"encoding/json"
 	"fmt"
-	"github.com/welyss/slow-log-transfer/elasticsearch"
-	"github.com/welyss/slow-log-transfer/mysql"
-	"github.com/xwb1989/sqlparser"
 	"log"
 	"net/url"
 	"os"
 	"strconv"
 	"strings"
 	"time"
+
+	"github.com/welyss/slow-log-transfer/elasticsearch"
+	"github.com/welyss/slow-log-transfer/mysql"
+	"github.com/xwb1989/sqlparser"
 )
 
 const (
@@ -123,9 +124,12 @@ func actionInLoop(task *Task, buf *bytes.Buffer, query string, args ...interface
 		} else if len(slowlog.StartTime) > 19 && slowlog.StartTime[19:26] == ".000000" {
 			slowlog.StartTime = slowlog.StartTime[0:25] + "1"
 		}
+		log.Println("====================slowlog.StartTime1:", slowlog.StartTime)
 		// convert by es default timezone
-		local, _ := time.ParseInLocation(FullTimeLayout, slowlog.StartTime, time.Local)
-		slowlog.StartTime = local.In(time.UTC).Format(FullTimeLayout)
+		local, _ := time.ParseInLocation(DateTimeLayout, slowlog.StartTime, time.Local)
+		// slowlog.StartTime = local.In(time.UTC).Format(FullTimeLayout)
+		slowlog.StartTime = local.Format(FullTimeLayout)
+		log.Println("======================slowlog.StartTime:", slowlog.StartTime)
 		lastPointTmp = slowlog.StartTime
 		// user_host
 		matched := re.FindAllStringSubmatch(string(values[1]), -1)
